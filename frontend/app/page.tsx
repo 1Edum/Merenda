@@ -1,11 +1,10 @@
-import Card from "./_components/card";
-import InserirFood from "./_components/food-item";
+import Banner from "./_components/banner";
 
 
 export default function Home() {
   return (
     <main>
-      <Card />
+      <Banner />
     </main>
   );
 }
