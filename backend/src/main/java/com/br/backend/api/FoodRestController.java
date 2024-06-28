@@ -12,6 +12,7 @@ import java.util.List;
 public class FoodRestController {
     @Autowired
     private FoodRepository foodRepository;
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/listar")
         public List<Food> listar(){
         return foodRepository.findAll();

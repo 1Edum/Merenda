@@ -19,4 +19,5 @@ public class Food {
     private String nome;
     private String description;
     private String image;
+    private String category;
 }
