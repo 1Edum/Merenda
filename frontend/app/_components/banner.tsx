@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from './Button'
 
 export default function Banner() {
   return (
@@ -6,8 +7,9 @@ export default function Banner() {
         <h1 className='text-4xl uppercase font-semibold py-3'>Sesi Merenda</h1>
         <p>Plataforma de apoio à alimentação para alunos e
         cozinheiros do SESI.</p>
-        <div className='py-4'>
-        <button className='border-primary text-primary border w-full py-3 rounded-md'>Ainda não é aluno?</button>
+        <div className='py-4 flex flex-col gap-3'>
+        <Button text="Entrar"/>
+        <Button text="Ainda não é aluno?"/>
         </div>
     </div>
   )
