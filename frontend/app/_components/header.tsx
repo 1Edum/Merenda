@@ -15,7 +15,7 @@ export default function Header() {
             <div className='w-[2px] bg-secondary h-10 my-4'>
 
             </div>
-        <h2 className='text-red-600 font-semibold text-lg'>
+        <h2 className='text-primary font-semibold text-lg'>
             Merenda
         </h2>
     </div>

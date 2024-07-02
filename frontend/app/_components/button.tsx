@@ -6,7 +6,7 @@ interface ButtonProps{
 
 function Button({text}: ButtonProps) {
   return (
-    <div className='border-primary text-primary border w-full py-2 rounded-md'>{text}</div>
+    <div className='border-primary text-primary border w-full py-2 rounded-md text-center'>{text}</div>
   )
 }
 
