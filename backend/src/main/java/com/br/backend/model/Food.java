@@ -16,7 +16,7 @@ public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Adicionando geração automática de ID
     private Long id;
-    private String nome;
+    private String name;
     private String description;
     private String image;
     private String category;
