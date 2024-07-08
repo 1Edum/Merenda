@@ -3,7 +3,7 @@ import NavMenu from "../_components/nav-menu";
 
 const listMenus: [string[], string[]] = [
   ["Café da Manhã", "Almoço", "Café da Tarde"],
-  ["student/cafe-manha", "almoco", "cafe-tarde"]
+  ["student/cafe-manha", "student/almoco", "student/cafe-tarde"]
 ];
 
 export const metadata: Metadata = {
@@ -19,8 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavMenu menus={listMenus} />
-        {children}
+        <nav>
+          <NavMenu menus={listMenus} />
+        </nav>
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );
