@@ -20,4 +20,6 @@ public class Food {
     private String description;
     private String image;
     private String category;
+    private Boolean status;
+    private Number quantity;
 }
