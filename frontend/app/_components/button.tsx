@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { ComponentProps } from 'react'
 
-interface ButtonProps{
-    text: String;
+interface ButtonProps extends ComponentProps<'button'>{
+    children: string;
 }
 
-function Button({text}: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
-    <div className='border-primary text-primary border w-full py-2 rounded-md text-center'>{text}</div>
+    <button {...props} className='border-primary text-primary border w-full py-2 rounded-md text-center'>
+      {props.children}
+    </button>
+    
   )
 }
 

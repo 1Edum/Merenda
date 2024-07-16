@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { ComponentProps } from 'react'
 
-interface InputProps{
-    height?: String;
+interface InputProps extends ComponentProps<'input'>{
     text: String
 }
 
-function Input({text, height}: InputProps) {
+function Input(props: InputProps) {
   return (
     <div>
-        <label>{text}</label>
-        <input type="text" className={`${height} border-primary text-primary border w-full py-1 rounded-md bg-transparent`} />
+        <label>{props.text}</label>
+        <input type="text" className='border-primary border w-full py-1 rounded-md bg-transparent' />
     </div>
   )
 }
