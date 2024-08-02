@@ -1,9 +1,14 @@
 import React from 'react'
 import Image from "next/image";
+import Link from 'next/link';
 
-export default function Header() {
+interface HeaderProps{
+  icon?: string
+}
+
+export default function Header({icon}: HeaderProps) {
   return (
-    <div className='flex items-center justify-center gap-3'>
+    <div className='flex items-center justify-center gap-3 border border-b'>
         <Image
               src="/sesi-logo.webp"
               alt="Vercel Logo"
@@ -18,6 +23,12 @@ export default function Header() {
         <h2 className='text-primary font-semibold text-lg'>
             Merenda
         </h2>
+        <Link href={"/kitchen/inserir"}>
+        <div className='text-primary font-semibold text-4xl ml-4'>
+          {icon}
+        </div>
+        
+        </Link>
     </div>
   )
 }
