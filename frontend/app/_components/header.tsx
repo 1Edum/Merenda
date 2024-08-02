@@ -8,7 +8,7 @@ interface HeaderProps{
 
 export default function Header({icon}: HeaderProps) {
   return (
-    <div className='flex items-center justify-center gap-3 border border-b'>
+    <div className='flex items-center justify-center gap-3 border border-b h-[12vh]'>
         <Image
               src="/sesi-logo.webp"
               alt="Vercel Logo"
