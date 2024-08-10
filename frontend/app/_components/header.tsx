@@ -10,10 +10,10 @@ export default function Header({icon}: HeaderProps) {
   return (
     <div className='flex items-center justify-center gap-3 border border-b h-[12vh]'>
         <Image
-              src="/sesi-logo.webp"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={130}
+              src="/logo.png"
+              alt="Logo Gestão Merenda"
+              className="w-auto h-auto"
+              width={220}
               height={24}
               priority
             />
