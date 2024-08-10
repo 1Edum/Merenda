@@ -16,7 +16,7 @@ const FoodItem: React.FC<FoodItemProps> = ({ category, bg, text }) => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[...Array(4)].map((_, index) => (
           <div key={index} className="bg-zinc-200 h-64 text-white p-2"></div>
         ))}
@@ -33,10 +33,10 @@ const FoodItem: React.FC<FoodItemProps> = ({ category, bg, text }) => {
     : foods;
 
   return (
-    <ul className="grid grid-cols-2 gap-4">
+    <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 ">
       {filteredFoods.map(food => (
-        <li key={food.id} className="bg-zinc-400 h-64 text-white p-2 rounded-md">
-          <div className="w-full h-1/3">
+        <li key={food.id} className="bg-zinc-400 h-64 md:h-80 text-white p-2 rounded-md">
+          <div className="w-full h-1/3 md:h-2/3">
             <Image 
               src={food.image}
               alt={food.name}
@@ -47,7 +47,7 @@ const FoodItem: React.FC<FoodItemProps> = ({ category, bg, text }) => {
               quality={100}
             />
           </div>
-          <div className="h-2/3 flex flex-col">
+          <div className="h-2/3 md:h-1/3 flex flex-col">
             <h2 className="text-xl h-20">{food.name}</h2>
             <p className="text-xs break-words h-36">{food.description}</p>
             <button className={`${bg} w-full rounded-md`}>{text}</button>
