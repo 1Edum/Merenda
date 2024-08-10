@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import NavMenu from "../_components/nav-menu";
+import Header from "../_components/header";
 
 const listMenus: [string[], string[]] = [
   ["Café da Manhã", "Almoço", "Café da Tarde"],
@@ -19,9 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <header>
+        <Header />
         <nav>
           <NavMenu menus={listMenus} />
         </nav>
+        </header>
         <main>
           {children}
         </main>
