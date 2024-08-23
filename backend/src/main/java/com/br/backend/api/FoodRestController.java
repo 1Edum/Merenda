@@ -26,6 +26,10 @@ public class FoodRestController {
         foodRepository.save(food);
     }
 
+    // Inserir vários alunos
+    @PostMapping("/inserir-varios")
+    public void inserirVarios(@RequestBody List<Food> alunos) {foodRepository.saveAll(alunos);}
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
         Optional<Food> existingFood = foodRepository.findById(id);
