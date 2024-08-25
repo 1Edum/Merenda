@@ -8,7 +8,7 @@ interface HeaderProps{
 
 export default function Header({icon}: HeaderProps) {
   return (
-    <div className='flex items-center justify-center gap-3 border border-b h-[12vh]'>
+    <header className='flex items-center justify-center gap-3 border border-b h-[12vh]'>
         <Image
               src="/logo.png"
               alt="Logo Gestão Merenda"
@@ -17,9 +17,7 @@ export default function Header({icon}: HeaderProps) {
               height={24}
               priority
             />
-            <div className='w-[2px] bg-secondary h-10 my-4'>
-
-            </div>
+            <div className='w-[2px] bg-secondary h-10 my-4' />
         <h2 className='text-primary font-semibold text-lg'>
             Merenda
         </h2>
@@ -29,6 +27,6 @@ export default function Header({icon}: HeaderProps) {
         </div>
         
         </Link>
-    </div>
+    </header>
   )
 }
