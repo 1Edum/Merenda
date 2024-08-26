@@ -18,7 +18,7 @@ public class Food {
     private Long id;
     private String name;
     private String description;
-    private String image;
+    private String imageUrl;
     private String category;
     private Boolean status;
     private Number quantity;
