@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +25,27 @@ public class FoodRestController {
     }
 
     @PostMapping("/inserir")
-    public void inserir(@RequestBody Food food) {
-        foodRepository.save(food);
+    public ResponseEntity<Food> inserir(@RequestPart("food") Food food, @RequestPart("image") MultipartFile image) {
+        try {
+            // Defina o diretório onde o arquivo será salvo
+            String directory = "uploads/";
+            String fileName = image.getOriginalFilename();
+            String filePath = directory + fileName;
+
+            // Salve o arquivo no servidor
+            File dest = new File(filePath);
+            image.transferTo(dest);
+
+            // Defina a URL da imagem na entidade Food
+            food.setImageUrl("/uploads/" + fileName);
+
+            // Salve a entidade Food no banco de dados
+            Food savedFood = foodRepository.save(food);
+
+            return new ResponseEntity<>(savedFood, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Inserir vários alunos
