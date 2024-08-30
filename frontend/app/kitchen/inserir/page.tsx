@@ -2,8 +2,8 @@
 
 // components/Page.tsx
 import React, { useState } from 'react';
-import Button from '@/app/_components/button';
-import Input from '@/app/_components/input';
+import { Button } from '@/app/_components/ui/button';
+import { Input } from '@/app/_components/ui/input';
 import useAddFood from '@/app/_hooks/useAddFood';
 
 function Page() {
@@ -49,8 +49,8 @@ function Page() {
     <main className='flex flex-col justify-center items-center gap-y-2 h-[85vh]'>
       <section className='bg-zinc-300 p-4 flex flex-col gap-y-4'>
         <h3>Adicionar Comida </h3>
-        <Input text={"Nome"} value={name} onChange={(e) => setName(e.target.value)} />
-        <Input text={"Descrição"} value={description} height={"h-20"} onChange={(e) => setDescription(e.target.value)} />
+        <Input placeholder={"Nome"} value={name} onChange={(e) => setName(e.target.value)} />
+        <Input placeholder={"Descrição"} value={description} height={"h-20"} onChange={(e) => setDescription(e.target.value)} />
         <div className='border border-primary flex flex-col justify-center items-center rounded h-28 p-4'>
           <label htmlFor="file-upload" className='cursor-pointer text-center'>
             {selectedFile ? selectedFile.name : "Adicionar Imagem"}
@@ -63,27 +63,7 @@ function Page() {
             className='hidden'
           />
         </div>
-        <h3>Horário</h3>
-        <div className='flex items-center justify-between'>
-          <div
-            className={`p-1 text-sm rounded-md cursor-pointer ${getCategoryClass('Café da Manha')}`}
-            onClick={() => handleCategoryClick('Café da Manha')}
-          >
-            Café da Manha
-          </div>
-          <div
-            className={`p-1 text-sm rounded-md cursor-pointer ${getCategoryClass('Almoço')}`}
-            onClick={() => handleCategoryClick('Almoço')}
-          >
-            Almoço
-          </div>
-          <div
-            className={`p-1 text-sm rounded-md cursor-pointer ${getCategoryClass('Café da Tarde')}`}
-            onClick={() => handleCategoryClick('Café da Tarde')}
-          >
-            Café da Tarde
-          </div>
-        </div>
+        
         <Button onClick={handleSubmit} disabled={loading} >Cadastrar</Button>
         {loading && <p>Carregando...</p>}
         {error && <p className="text-red-500">Erro: {error}</p>}
