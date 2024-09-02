@@ -1,17 +1,18 @@
 'use client'
 
-// components/Page.tsx
 import React, { useState } from 'react';
 import { Button } from '@/app/_components/ui/button';
 import { Input } from '@/app/_components/ui/input';
 import useAddFood from '@/app/_hooks/useAddFood';
+import useFirebaseUpload from '@/app/_hooks/useFirebaseUpload';
 
 function Page() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [category, setCategory] = useState('');
-  const { addFood, loading, error, success } = useAddFood();
+  const { addFood, loading: addingFood, error: addError, success } = useAddFood();
+  const { uploadFile, uploading, error: uploadError } = useFirebaseUpload();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -19,22 +20,19 @@ function Page() {
     }
   };
 
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    let imageBase64 = null;
+
     if (selectedFile) {
-      imageBase64 = await convertFileToBase64(selectedFile);
+      // Faz o upload do arquivo para o Firebase Storage e obtém a URL da imagem
+      const imageUrl = await uploadFile(selectedFile);
+
+      // Verifica se o upload foi bem-sucedido antes de prosseguir
+      if (imageUrl) {
+        // Envia a URL da imagem para o backend junto com outros dados do formulário
+        await addFood({ name, description, image: imageUrl, category });
+      }
     }
-    await addFood({ name, description, image: imageBase64, category });
   };
 
   const handleCategoryClick = (selectedCategory: string) => {
@@ -64,9 +62,11 @@ function Page() {
           />
         </div>
         
-        <Button onClick={handleSubmit} disabled={loading} >Cadastrar</Button>
-        {loading && <p>Carregando...</p>}
-        {error && <p className="text-red-500">Erro: {error}</p>}
+        <Button onClick={handleSubmit} disabled={uploading || addingFood}>
+          {uploading || addingFood ? "Carregando..." : "Cadastrar"}
+        </Button>
+        {uploadError && <p className="text-red-500">Erro ao fazer upload: {uploadError}</p>}
+        {addError && <p className="text-red-500">Erro ao adicionar comida: {addError}</p>}
         {success && <p className="text-green-500">Comida adicionada com sucesso!</p>}
       </section>
     </main>
