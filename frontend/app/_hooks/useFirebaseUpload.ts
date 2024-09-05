@@ -1,38 +1,41 @@
-// src/_hooks/useFirebaseUpload.ts
-
+// useFirebaseUpload.ts
 import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { FirebaseApp } from 'firebase/app'; // Ajuste o caminho conforme necessário
+
 import { storage } from '../firebaseConfig';
 
-const useFirebaseUpload = () => {
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [url, setUrl] = useState<string | null>(null);
+// Tipos para o estado e erros
+interface UseFirebaseUploadResult {
+  uploadFile: (file: File) => Promise<string | null>;
+  uploading: boolean;
+  error: string | null;
+}
 
-  const uploadFile = async (file: File) => {
+const useFirebaseUpload = (): UseFirebaseUploadResult => {
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const uploadFile = async (file: File): Promise<string | null> => {
     setUploading(true);
     setError(null);
 
     try {
-      // Cria uma referência para o arquivo no Firebase Storage
-      const fileRef = ref(storage, `images/${file.name}`);
-      
-      // Faz o upload do arquivo
-      const snapshot = await uploadBytes(fileRef, file);
+      const storageRef = ref(storage); // Referência ao storage
+      const fileRef = ref(storageRef, `images/${file.name}`); // Referência ao arquivo
+      await uploadBytes(fileRef, file); // Upload do arquivo
 
-      // Obtém a URL pública do arquivo
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      
-      setUrl(downloadURL);
+      const downloadURL = await getDownloadURL(fileRef); // Obtém a URL de download
       return downloadURL;
     } catch (err) {
-      setError((err as Error).message);
+      setError((err as Error).message); // Define a mensagem de erro
+      return null;
     } finally {
       setUploading(false);
     }
   };
 
-  return { uploadFile, uploading, url, error };
+  return { uploadFile, uploading, error };
 };
 
 export default useFirebaseUpload;

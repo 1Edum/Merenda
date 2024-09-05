@@ -35,22 +35,19 @@ function Page() {
     }
   };
 
-  const handleCategoryClick = (selectedCategory: string) => {
-    setCategory(selectedCategory);
-  };
-
-  const getCategoryClass = (currentCategory: string) => {
-    return category === currentCategory ? 'bg-blue-500 text-white' : 'bg-white';
-  };
-
   return (
     <main className='flex flex-col justify-center items-center gap-y-2 h-[85vh]'>
-      <section className='bg-zinc-300 p-4 flex flex-col gap-y-4'>
-        <h3>Adicionar Comida </h3>
+      <section className='absolute top-[15vh]'>
+        {uploadError && <p className="text-red-500">Erro ao fazer upload: {uploadError}</p>}
+        {addError && <p className="text-red-500">Erro ao adicionar comida: {addError}</p>}
+        {success && <p className="text-green-500">Comida adicionada com sucesso!</p>}
+      </section>
+      <section className='bg-zinc-300 py-7 px-4 flex flex-col text-center gap-y-4 w-[80vw] md:w-[50vh]'>
+        <h3 className='text-2xl text-center mb-5'>Adicionar Comida </h3>
         <Input placeholder={"Nome"} value={name} onChange={(e) => setName(e.target.value)} />
         <Input placeholder={"Descrição"} value={description} height={"h-20"} onChange={(e) => setDescription(e.target.value)} />
-        <div className='border border-primary flex flex-col justify-center items-center rounded h-28 p-4'>
-          <label htmlFor="file-upload" className='cursor-pointer text-center'>
+        <div className='border border-primary flex flex-col justify-center items-center rounded'>
+          <label htmlFor="file-upload" className='cursor-pointer p-16'>
             {selectedFile ? selectedFile.name : "Adicionar Imagem"}
           </label>
           <input
@@ -61,13 +58,10 @@ function Page() {
             className='hidden'
           />
         </div>
-        
         <Button onClick={handleSubmit} disabled={uploading || addingFood}>
           {uploading || addingFood ? "Carregando..." : "Cadastrar"}
         </Button>
-        {uploadError && <p className="text-red-500">Erro ao fazer upload: {uploadError}</p>}
-        {addError && <p className="text-red-500">Erro ao adicionar comida: {addError}</p>}
-        {success && <p className="text-green-500">Comida adicionada com sucesso!</p>}
+
       </section>
     </main>
   );
