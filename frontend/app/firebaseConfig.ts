@@ -1,11 +1,9 @@
 // src/firebaseConfig.ts
 
-// Importa as funções necessárias do SDK do Firebase
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getStorage } from "firebase/storage";
+import { initializeApp } from 'firebase/app';
+import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getStorage } from 'firebase/storage';
 
-// Sua configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyB9RTeg6pFXfDO4otBuIBmKClZRoyooG1g",
   authDomain: "merenda-a7389.firebaseapp.com",
@@ -19,10 +17,15 @@ const firebaseConfig = {
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializa o Analytics, caso você precise usar
-const analytics = getAnalytics(app);
+// Inicializa o Analytics apenas se for suportado
+let analytics;
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics(app);
+  }
+});
 
-// Exporta o Firebase Storage para ser usado em outros lugares da aplicação
+// Exporta o Firebase Storage e Analytics (se suportado) para serem usados em outros lugares da aplicação
 export const storage = getStorage(app);
-
+export { analytics };
 export default app;
