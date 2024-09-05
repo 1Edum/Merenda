@@ -12,7 +12,7 @@ export default function Header({icon}: HeaderProps) {
         <Image
               src="/logo.png"
               alt="Logo Gestão Merenda"
-              className="w-auto h-auto"
+              className="md:w-auto md:h-auto w-48"
               width={220}
               height={24}
               priority
