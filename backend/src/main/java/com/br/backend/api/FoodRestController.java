@@ -35,7 +35,7 @@ public class FoodRestController {
             String imageUrl = firebaseStorageService.uploadFile(image);
 
             // Defina a URL da imagem na entidade Food
-            food.setimageUrl(imageUrl);
+            food.setImageUrl(imageUrl);
 
             // Salve a entidade Food no banco de dados
             Food savedFood = foodRepository.save(food);
