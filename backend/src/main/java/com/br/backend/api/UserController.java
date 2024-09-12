@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.br.backend.model.User;
 import com.br.backend.repository.UserRepository;
 import com.br.backend.util.FileUploadUtil;
+import org.springframework.util.StringUtils;
 
 import jakarta.validation.Valid;
 
