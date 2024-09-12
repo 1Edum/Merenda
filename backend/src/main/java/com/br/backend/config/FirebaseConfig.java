@@ -6,15 +6,22 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 
 @Configuration
 public class FirebaseConfig {
+
+    @SuppressWarnings("deprecation")
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
-        FileInputStream serviceAccount =
-                new FileInputStream("path/to/your/firebase-service-account.json");
+        // Carregar o arquivo JSON do classpath
+        InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("serviceAccountKey.json");
+
+        if (serviceAccount == null) {
+            throw new FileNotFoundException("Não foi possível encontrar o arquivo serviceAccountKey.json no classpath.");
+        }
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
