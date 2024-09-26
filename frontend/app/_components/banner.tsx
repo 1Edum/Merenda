@@ -18,7 +18,7 @@ export default function Banner() {
           Plataforma de apoio à alimentação para alunos e cozinheiros do SESI.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3 w-64">
+      <CardContent className="flex flex-col gap-3 w-64 mt-6">
         <Link href={"/login"}>
           <Button>Entrar </Button>
         </Link>
