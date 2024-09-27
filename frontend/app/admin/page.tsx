@@ -1,24 +1,40 @@
-import { Button } from "@/app/_components/ui/button";
-import { Input } from "@/app/_components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/app/_components/ui/table";
 import React from "react";
-import { PlusCircle, Search } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../_components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../_components/ui/select";
 import TableInfos from "../_components/table-infos";
+import ScrollToTopButton from "../_components/ScrollButton";
+
+// Definindo o tipo Field diretamente aqui para referência
+interface Field {
+  type: 'input' | 'select'; // Usando o tipo literal
+  label: string;
+  placeholder?: string; // Apenas para selects
+  options?: { value: string; text: string }[]; // Para select
+}
 
 
-export default function page() {
+export default function Page() {
+  const fields: Field[] = [ // Aqui definimos o tipo do array
+    { type: 'input', label: 'Nome' },
+    { type: 'input', label: 'Email' },
+    {
+      type: 'select',
+      label: 'Profissão',
+      placeholder: 'Selecione uma profissão',
+      options: [
+        { value: 'Aluno', text: 'Estudante' },
+        { value: 'Cozinheiro', text: 'Cozinheiro' },
+        { value: 'Administrador', text: 'Administrador' },
+      ],
+    },
+  ];
+
   return (
-    <div className="P-6 max-w-4xl mx-auto space-y-2">
-      <TableInfos />
+
+    <div className="lg:px-24 px-5 py-3 ">
+
+      <TableInfos textfilter="Filtrar e-mail" addinfo="Adicionar Usuário" descriptioninfo="Preencha para adicionar novo usuário" fields={fields} />
+      
+      <ScrollToTopButton />
     </div>
+
   );
 }
