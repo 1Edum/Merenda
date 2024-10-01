@@ -1,9 +1,7 @@
 package com.br.backend.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,24 +18,24 @@ public class User {
     private Long id;
 
     private String name;
-
     private String email;
-
     private String password;
 
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // Relacionamento com Role
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id",
-                    referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn
-                    (name = "role_id",
-                            referencedColumnName = "id"))
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Collection<Role> roles;
-    @ManyToMany
+
+    // Relacionamento com ClassRoom
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_classrooms",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "classroom_id")
+    )
     private List<ClassRoom> classRoom;
-
-
-
 }
