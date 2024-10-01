@@ -4,62 +4,62 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 
+interface Field {
+  type: string; // Tipo do campo (ex: 'text', 'password', 'select')
+  name: string; // Nome do campo
+  placeholder: string; // Placeholder do campo
+  options?: string[]; // Se for um select, as opções
+}
+
 interface DialogComponentProps {
   addinfo: string;
   descriptioninfo: string;
+  fields: Field[]; // Campos dinâmicos
+  apiEndpoint: string; // Endpoint da API
 }
 
-function DialogComponent({ addinfo, descriptioninfo }: DialogComponentProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState(''); // Para armazenar o role selecionado
-  const [classRoom, setClassRoom] = useState(''); // Para armazenar a classRoom selecionada
+function DialogComponent({ addinfo, descriptioninfo, fields, apiEndpoint }: DialogComponentProps) {
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
-  // Função para enviar o usuário para a API
-  const handleAddUser = () => {
+  // Atualiza o estado dos campos dinamicamente
+  const handleInputChange = (name: string, value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Função para enviar dados para a API
+  const handleSubmit = () => {
     // Verifica se todos os campos estão preenchidos
-    if (!name || !email || !password || !role || !classRoom) {
-      alert('Preencha todos os campos!');
-      return;
+    for (const field of fields) {
+      if (!formData[field.name]) {
+        alert(`Preencha o campo: ${field.placeholder}`);
+        return;
+      }
     }
 
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-      roles: [{ name: role }],  // Role selecionada
-      classRoom: [{ name: classRoom }]  // Classe selecionada
-    };
-
-    console.log('Enviando usuário:', newUser); // Log dos dados que você está enviando
-
-    fetch('http://localhost/user/inserir', {
+    fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify(formData),
     })
       .then((response) => {
-        console.log('Response status:', response.status); // Log da resposta do servidor
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('Erro ao adicionar usuário');
+          throw new Error('Erro ao adicionar dados');
         }
       })
       .then((data) => {
-        console.log('Usuário adicionado com sucesso:', data);
+        console.log('Dados adicionados com sucesso:', data);
         // Limpa os campos após o sucesso
-        setName('');
-        setEmail('');
-        setPassword('');
-        setRole('');
-        setClassRoom('');
+        setFormData({});
       })
       .catch((error) => {
-        console.error('Erro ao adicionar usuário:', error);
+        console.error('Erro ao adicionar dados:', error);
       });
   };
 
@@ -74,48 +74,38 @@ function DialogComponent({ addinfo, descriptioninfo }: DialogComponentProps) {
           <DialogDescription>{descriptioninfo}</DialogDescription>
         </DialogHeader>
         <form className="space-y-3">
-          <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} />
-          <section className='flex gap-x-4'>
-            <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input placeholder="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </section>
-          
-          {/* Select para Role */}
-          <section className='flex gap-x-4'>
-
-            <Select onValueChange={setRole}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma função" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Estudante">Estudante</SelectItem>
-                <SelectItem value="Cozinheiro">Cozinheiro</SelectItem>
-                <SelectItem value="Administrador">Administrador</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Select para ClassRoom */}
-            <Select onValueChange={setClassRoom}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma sala de aula" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1 Ano A">1 Ano A</SelectItem>
-                <SelectItem value="2 Ano B">2 Ano B</SelectItem>
-                <SelectItem value="3 Ano C">3 Ano C</SelectItem>
-              </SelectContent>
-            </Select>
-
-          </section>
-
+          {fields.map((field) =>
+            field.type === 'select' ? (
+              <Select key={field.name} onValueChange={(value) => handleInputChange(field.name, value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={field.placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {field.options?.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input
+                key={field.name}
+                type={field.type}
+                placeholder={field.placeholder}
+                value={formData[field.name] || ''}
+                onChange={(e) => handleInputChange(field.name, e.target.value)}
+              />
+            )
+          )}
           <DialogFooter>
-            <Button variant={"outline"}>Cancelar</Button>
-            <Button variant={"destructive"} onClick={handleAddUser}>Salvar</Button>
+            <Button variant="outline">Cancelar</Button>
+            <Button variant="destructive" onClick={handleSubmit}>Salvar</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default DialogComponent;
