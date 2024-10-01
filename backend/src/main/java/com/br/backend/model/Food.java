@@ -17,9 +17,7 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Adicionando geração automática de ID
     private Long id;
     private String name;
-    private String description;
-    private String imageUrl;
-    private String category;
-    private Boolean status;
-    private Number quantity;
+    private String category; //Sólido ou Líquido
+    private Double calories;
+    private Double nutritionalValue;
 }
