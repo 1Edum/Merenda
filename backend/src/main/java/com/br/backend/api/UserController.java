@@ -9,6 +9,8 @@ import com.br.backend.model.User;
 import com.br.backend.repository.ClassRoomRepository;
 import com.br.backend.repository.RoleRepository;
 import com.br.backend.repository.UserRepository;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,9 @@ public class UserController {
 
     @Autowired
     private ClassRoomRepository classRoomRepository;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ClassRoom> classRooms;
 
     // Listar todos os usuários
     @GetMapping("/listar")
@@ -58,12 +63,30 @@ public class UserController {
     // Deletar um usuário por ID
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if (existingUser.isPresent()) {
-            userRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            Optional<User> existingUser = userRepository.findById(id);
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+
+                // Remova todas as associações do usuário com roles (funções)
+                user.getRoles().clear();
+
+                // Remova todas as associações do usuário com salas de aula
+                user.getClassRoom().clear();
+
+                // Salve o usuário sem as associações
+                userRepository.save(user);
+
+                // Agora podemos deletar o usuário
+                userRepository.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Logar a exceção para ver detalhes no log do servidor
+            System.err.println("Erro ao deletar o usuário: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
