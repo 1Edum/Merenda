@@ -9,6 +9,7 @@ import ScrollToTopButton from "../_components/scroll-button";
 
 import { Food } from "../interface/Food";
 import { Table } from "../_components/table-infos/table/table";
+import { Trash2 } from "lucide-react";
 
 export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
@@ -28,6 +29,22 @@ export default function Page() {
       });
   }, []);
 
+  const handleExcluirUser = (id: number) => {
+    fetch(`http://localhost/user/deletar/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          setUsers(users.filter((user) => user.id !== id));
+        } else {
+          console.error("Erro ao excluir o usuário:", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao excluir o usuário:", error);
+      });
+  };
+
   // Fetch de alimentos
   useEffect(() => {
     fetch("http://localhost/food/listar")
@@ -43,6 +60,10 @@ export default function Page() {
   // Filtro de usuários
   const handleFilterChangeUser = (filterValue: string) => {
     setUserFilter(filterValue);
+  };
+
+  const excluirUser = (id: number) => {
+    setUsers(users.filter((user) => user.id !== id));
   };
 
   const filteredUsers = users.filter((user) => user.email.includes(userFilter));
@@ -95,7 +116,7 @@ export default function Page() {
         </div>
         <Table.Root>
           <Table.Header>
-            {["Nome", "Email", "Roles"].map((item) => (
+            {["Nome", "Email", "Profissão", "Ações"].map((item) => (
               <Table.Cell key={item} textcell={item} />
             ))}
           </Table.Header>
@@ -107,6 +128,10 @@ export default function Page() {
                 <Table.Cell
                   textcell={user.roles.map((role) => role.name).join(", ")}
                 />
+                <Table.Actions>
+                  <Table.Action icon={Trash2} onClick={() => handleExcluirUser(user.id)}/>
+                </Table.Actions>
+                
               </Table.Row>
             ))}
           </Table.Body>
