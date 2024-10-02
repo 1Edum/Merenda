@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ButtonHTMLAttributes, ElementType, ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Food } from "@/app/interface/Food";
@@ -64,6 +64,23 @@ const TableBody = ({ children }: TableBodyProps) => {
   return <div className="w-full ">{children}</div>;
 };
 
+interface TableActionsProps{
+  children: ReactNode,
+}
+
+const TableActions = ({children}: TableActionsProps) => {
+return <div>{children}</div>
+}
+
+interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+  icon: ElementType,
+}
+
+
+const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
+return <button {...rest}><Icon /></button>
+}
+
 // Table object with all components
 export const Table = {
   Root: TableRoot,
@@ -71,4 +88,6 @@ export const Table = {
   Cell: TableCell,
   Body: TableBody,
   Row: TableRow,
+  Action: TableAction,
+  Actions: TableActions,
 };
