@@ -24,7 +24,7 @@ Use of Java with MYSQL to create the database, exploring concepts such as user a
 When opening your code editor in the terminal, type:
 
 ```bash
-git clone https://github.com/1Edum/Menu-Nike.git
+https://github.com/1Edum/Merenda.git
 ```
 
 To see the Front-end of the application type:
