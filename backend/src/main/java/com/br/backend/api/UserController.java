@@ -1,19 +1,13 @@
 package com.br.backend.api;
 
-
-
-import com.br.backend.model.ClassRoom;
-import com.br.backend.model.Food;
 import com.br.backend.model.Role;
 import com.br.backend.model.User;
-import com.br.backend.repository.ClassRoomRepository;
 import com.br.backend.repository.RoleRepository;
 import com.br.backend.repository.UserRepository;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,11 +24,7 @@ public class UserController {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private ClassRoomRepository classRoomRepository;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<ClassRoom> classRooms;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // Listar todos os usuários
     @GetMapping("/listar")
@@ -45,6 +35,9 @@ public class UserController {
     // Inserir um único usuário
     @PostMapping("/inserir")
     public ResponseEntity<User> inserir(@RequestBody User user) {
+        // Hash a senha antes de criar o usuário
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         User savedUser = createUserWithRolesAndClassRooms(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -54,6 +47,8 @@ public class UserController {
     public ResponseEntity<Void> inserirVarios(@RequestBody List<User> users) {
         List<User> savedUsers = new ArrayList<>();
         for (User user : users) {
+            // Hash a senha de cada usuário antes de salvar
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             savedUsers.add(createUserWithRolesAndClassRooms(user));
         }
         userRepository.saveAll(savedUsers);
@@ -70,9 +65,6 @@ public class UserController {
 
                 // Remova todas as associações do usuário com roles (funções)
                 user.getRoles().clear();
-
-                // Remova todas as associações do usuário com salas de aula
-                user.getClassRoom().clear();
 
                 // Salve o usuário sem as associações
                 userRepository.save(user);
@@ -102,21 +94,10 @@ public class UserController {
             roles.add(existingRole);
         }
 
-        // Processa as classRoom
-        List<ClassRoom> classRooms = new ArrayList<>();
-        for (ClassRoom classRoom : user.getClassRoom()) {
-            ClassRoom existingClassRoom = classRoomRepository.findByName(classRoom.getName());
-            if (existingClassRoom == null) {
-                existingClassRoom = classRoomRepository.save(classRoom);  // Salva nova classRoom, se não existir
-            }
-            classRooms.add(existingClassRoom);
-        }
-
-        // Atualiza o usuário com as roles e classRoom processadas
+        // Atualiza o usuário com as roles processadas
         user.setRoles(roles);
-        user.setClassRoom(classRooms);
 
-        // Salva o usuário
+        // Salva o usuário e retorna
         return userRepository.save(user);
     }
 }
