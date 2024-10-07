@@ -2,6 +2,7 @@ package com.br.backend.api;
 
 import com.br.backend.model.Food;
 import com.br.backend.repository.FoodRepository;
+import com.br.backend.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/food")
 public class FoodRestController {
+
+    @Autowired
+    private FoodService foodService;
 
     @Autowired
     private FoodRepository foodRepository;
@@ -25,8 +33,9 @@ public class FoodRestController {
     }
 
     @PostMapping("/inserir")
-    public void inserir(@RequestBody Food food) {
-        foodRepository.save(food);
+    public ResponseEntity<Food> inserirFood(@RequestBody Food food) {
+        Food savedFood = foodService.saveFood(food); // Salva o objeto food, incluindo a URL da imagem
+        return ResponseEntity.status(201).body(savedFood);
     }
 
     @PostMapping("/inserir-varios")
