@@ -21,4 +21,10 @@ public class SimpleController {
     public ResponseEntity<String> helloUser(){
         return ResponseEntity.ok("Hello User");
     }
+
+    @PreAuthorize("hasRole('KITCHEN')")
+    @GetMapping("/kitchen")
+    public ResponseEntity<String> helloKitchen(){
+        return ResponseEntity.ok("Hello User");
+    }
 }

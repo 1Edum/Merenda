@@ -32,18 +32,14 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id",
-                    referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn
-                    (name = "role_id",
-                            referencedColumnName = "id"))
-    private Collection<Role> roles;
-
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles = new ArrayList<>(); // Inicializando a lista
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        for(Role role: roles) {
+        for (Role role : roles) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
             authorityList.add(authority);
         }
