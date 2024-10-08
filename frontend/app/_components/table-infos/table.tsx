@@ -1,7 +1,6 @@
 import React, { ButtonHTMLAttributes, ElementType, ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Food } from "@/app/interface/Food";
 
 // TableRoot Component
 const TableRootVariants = cva(
@@ -29,7 +28,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({ children }: TableHeaderProps) => {
-  return <div className="flex justify-between items-center w-full p-2">{children}</div>;
+  return <div className="flex justify-between items-center w-full px-4">{children}</div>;
 };
 
 // TableRow Component
@@ -38,19 +37,19 @@ interface TableRowProps {
 }
 
 const TableRow = ({ children }: TableRowProps) => {
-  return <div className="flex justify-between items-center w-full border-t">{children}</div>;
+  return <div className="flex justify-between items-center w-full border-t px-4">{children}</div>;
 };
 
 // TableCell Component
 interface TableCellProps {
   textcell?: string;
-  foods?: Food[];
+  children?: ReactNode; // Nova propriedade para a URL da imagem
 }
 
-const TableCell = ({ textcell, foods }: TableCellProps) => {
+const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="w-44 p-3 text-center">
-      {textcell && <span>{textcell}</span>}
+    <div className="w-44 p-2 text-start">
+      {textcell || children} {/* Use textcell ou children */}
     </div>
   );
 };
@@ -61,7 +60,7 @@ interface TableBodyProps {
 }
 
 const TableBody = ({ children }: TableBodyProps) => {
-  return <div className="w-full ">{children}</div>;
+  return <div className="w-full">{children}</div>;
 };
 
 interface TableActionsProps{
@@ -78,7 +77,7 @@ interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 
 
 const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
-return <button {...rest}><Icon /></button>
+return <button className='w-44' {...rest}><Icon /></button>
 }
 
 // Table object with all components
