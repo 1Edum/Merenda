@@ -5,6 +5,8 @@ import com.br.backend.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class FoodService {
 
@@ -14,6 +16,10 @@ public class FoodService {
     public Food saveFood(Food food) {
         return foodRepository.save(food);
     }
+
+    public void save(Food food) {
+    }
+
 
     // Outros métodos de manipulação de Food, como findById, findAll, etc.
 }
