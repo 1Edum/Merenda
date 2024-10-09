@@ -4,4 +4,6 @@ export interface Food {
     category: string;
     calories: number;
     nutritionalValue: number;
+    imageUrl: string; 
+    active: boolean;
   }
