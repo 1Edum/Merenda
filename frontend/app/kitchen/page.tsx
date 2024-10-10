@@ -5,9 +5,9 @@ import DialogComponent from "../_components/table-infos/dialog-component";
 import { Table } from "../_components/table-infos/table";
 import { useState, useEffect } from "react";
 import { Food } from "../interface/Food";
-import { deleteFood, fetchFoods } from "@/lib/services/food/foodService"; // fetchFoods para buscar os alimentos
+import { deleteFood, fetchFoods, toggleActiveFood } from "@/lib/services/food/foodService"; // toggleActiveFood para alterar o status
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { Trash2, CheckCircle, XCircle } from "lucide-react";
 import ScrollToTopButton from "../_components/scroll-button";
 
 function Page() {
@@ -34,6 +34,16 @@ function Page() {
     deleteFood(id, setFoods);
   };
 
+  const handleToggleActive = async (id: number, isActive: boolean) => {
+    try {
+      await toggleActiveFood(id, !isActive); // Função que altera o status de ativo
+      const updatedFoods = await fetchFoods(); // Atualiza a lista de alimentos
+      setFoods(updatedFoods);
+    } catch (error) {
+      console.error("Erro ao alterar o status de ativo:", error);
+    }
+  };
+
   const handleFilterChangeFood = (filterValue: string) => {
     setFoodFilter(filterValue);
   };
@@ -44,6 +54,7 @@ function Page() {
     { name: "Categoria" },
     { name: "Calorias (100g)" },
     { name: "Valor Nutricional" },
+    { name: "Ativo" },
     { name: "Ações" },
   ];
 
@@ -95,6 +106,10 @@ function Page() {
                   <Table.Cell textcell={food.calories.toString()} />
                   <Table.Cell textcell={food.nutritionalValue.toString()} />
                   <Table.Actions>
+                    <Table.Action
+                      icon={food.active ? XCircle : CheckCircle}
+                      onClick={() => handleToggleActive(food.id, food.active)}
+                  />
                     <Table.Action
                       icon={Trash2}
                       onClick={() => excluirAlimento(food.id)}
