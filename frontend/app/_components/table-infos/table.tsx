@@ -48,7 +48,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="w-44 p-2 text-start">
+    <div className="w-44 py-2 text-start">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
@@ -68,7 +68,7 @@ interface TableActionsProps{
 }
 
 const TableActions = ({children}: TableActionsProps) => {
-return <div>{children}</div>
+return <div className='w-[420px] flex justify-between'>{children}</div>
 }
 
 interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
