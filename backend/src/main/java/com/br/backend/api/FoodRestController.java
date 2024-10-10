@@ -53,4 +53,14 @@ public class FoodRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping("/active-true/{active}")
+    public void active(@PathVariable Boolean active,@RequestBody Food food){
+        Food food1 = foodRepository.getOne(food.getId());
+        if(active == Boolean.TRUE){
+            food1.setActive(false);
+        }else{
+            food1.setActive(Boolean.TRUE);
+        }
+        foodRepository.save(food1);
+    }
 }

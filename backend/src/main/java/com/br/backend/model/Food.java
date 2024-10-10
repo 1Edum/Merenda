@@ -17,11 +17,9 @@ public class Food {
     private String category;
     private int calories;
     private String nutritionalValue;
-    private String imageUrl; // Adicione este campo para a URL da imagem
-    @Column(name = "active")
+    private String imageUrl;
     private boolean active;
 
 
-    public void setActive(boolean active) {
-    }
+
 }
