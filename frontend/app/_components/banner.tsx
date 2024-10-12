@@ -12,7 +12,7 @@ import {
 export default function Banner() {
   return (
     <Card className="bg-secondary text-center p-5 flex flex-col items-center">
-      <CardHeader>
+      <CardHeader className="flex-col">
         <CardTitle className="text-4xl uppercase font-semibold py-3">Sesi Merenda</CardTitle>
         <CardDescription>
           Plataforma de apoio à alimentação para alunos e cozinheiros do SESI.
