@@ -29,7 +29,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({ children }: TableHeaderProps) => {
-  return <div className="flex justify-between items-center w-full px-4 font-semibold">{children}</div>;
+  return <div className="flex justify-between items-center w-full px-2 md:px-4 font-semibold">{children}</div>;
 };
 
 // TableRow Component
@@ -38,7 +38,7 @@ interface TableRowProps {
 }
 
 const TableRow = ({ children }: TableRowProps) => {
-  return <div className="flex justify-between items-center w-full border-t px-4">{children}</div>;
+  return <div className="flex justify-between items-center w-full border-t px-2 md:px-4">{children}</div>;
 };
 
 // TableCell Component
@@ -49,7 +49,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="w-44 py-2 text-start">
+    <div className="size-table py-2 text-start">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
@@ -60,7 +60,7 @@ interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 }
 
 const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
-return <button className='w-44' {...rest}><Icon /></button>
+return <button className='size-table' {...rest}><Icon /></button>
 }
 
 interface TableImageProps extends ImageProps {}

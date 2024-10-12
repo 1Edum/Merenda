@@ -67,4 +67,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  .size-table{
+    @apply w-14 text-wrap md:w-44
+  }
 }
