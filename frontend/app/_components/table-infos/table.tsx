@@ -1,6 +1,7 @@
 import React, { ButtonHTMLAttributes, ElementType, ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import Image, { ImageProps } from 'next/image';
 
 // TableRoot Component
 const TableRootVariants = cva(
@@ -28,7 +29,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({ children }: TableHeaderProps) => {
-  return <div className="flex justify-between items-center w-full px-4">{children}</div>;
+  return <div className="flex justify-between items-center w-full px-4 font-semibold">{children}</div>;
 };
 
 // TableRow Component
@@ -54,6 +55,19 @@ const TableCell = ({ textcell, children }: TableCellProps) => {
   );
 };
 
+interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+  icon: ElementType,
+}
+
+const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
+return <button className='w-44' {...rest}><Icon /></button>
+}
+
+interface TableImageProps extends ImageProps {}
+
+const TableImage = ({ ...rest }: TableImageProps) => {
+  return <Image {...rest} width={100} height={100}/>;
+};
 // TableBody Component
 interface TableBodyProps {
   children: ReactNode;
@@ -63,22 +77,6 @@ const TableBody = ({ children }: TableBodyProps) => {
   return <div className="w-full">{children}</div>;
 };
 
-interface TableActionsProps{
-  children: ReactNode,
-}
-
-const TableActions = ({children}: TableActionsProps) => {
-return <div className='w-[420px] flex justify-between'>{children}</div>
-}
-
-interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
-  icon: ElementType,
-}
-
-
-const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
-return <button className='w-44' {...rest}><Icon /></button>
-}
 
 // Table object with all components
 export const Table = {
@@ -88,5 +86,5 @@ export const Table = {
   Body: TableBody,
   Row: TableRow,
   Action: TableAction,
-  Actions: TableActions,
+  Image: TableImage,
 };
