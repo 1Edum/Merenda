@@ -59,6 +59,7 @@ function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Digite seu nome"
+            className='w-full'
           />
         </div>
         <div>
@@ -68,6 +69,7 @@ function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Digite sua senha"
+            className='w-full'
           />
         </div>
         <Button variant="destructive" onClick={handleLogin}>
