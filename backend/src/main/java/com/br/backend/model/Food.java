@@ -19,6 +19,7 @@ public class Food {
     private String nutritionalValue;
     private String imageUrl;
     private boolean active;
+    private int amount;
 
 
 
