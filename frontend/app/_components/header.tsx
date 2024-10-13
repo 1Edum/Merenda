@@ -35,7 +35,7 @@ export default function Header({ menu, links = [] }: HeaderProps) {
       {menu && (
         <div>
           <ul
-            className={`flex flex-col md:flex-row md:text-base text-primary text-2xl absolute text-justify md:static bg-white top-[86px] right-0 z-10 transition-all duration-500 ease-in ${
+            className={`flex flex-col md:flex-row md:text-base text-primary text-2xl absolute text-justify md:static bg-white top-[12vh] right-0 z-10 transition-all duration-500 ease-in ${
               open ? "" : "hidden md:flex"}`}>
             {links.length > 0 ? (
               links.map((link) => (
