@@ -5,14 +5,15 @@ import DialogComponent from "../_components/table-infos/dialog-component";
 import { Table } from "../_components/table-infos/table";
 import { useState, useEffect } from "react";
 import { Food } from "../interface/Food";
-import { deleteFood, fetchFoods, toggleActiveFood } from "@/lib/services/food/foodService"; // toggleActiveFood para alterar o status
-import Image from "next/image";
+import { deleteFood, fetchFoods, toggleActiveFood } from "@/lib/services/food/foodService";
 import { Trash2, CheckCircle, XCircle } from "lucide-react";
 import ScrollToTopButton from "../_components/scroll-button";
+import { TableMobile } from "@/lib/help-mobile/table-mobile";
 
 function Page() {
   const [foodFilter, setFoodFilter] = useState("");
   const [foods, setFoods] = useState<Food[]>([]);
+  const isMobile = TableMobile();
 
   // Função para buscar alimentos na API
   useEffect(() => {
@@ -48,20 +49,10 @@ function Page() {
     setFoodFilter(filterValue);
   };
 
-  const titles = [
-    { name: "Imagem" },
-    { name: "Nome" },
-    { name: "Categoria" },
-    { name: "Calorias (100g)" },
-    { name: "Valor Nutricional" },
-    { name: "Ativo" },
-    { name: "Ações" },
-  ];
-
   return (
     <div className="lg:px-24">
       <div className="border rounded-lg my-7" id="adicionarcomida">
-        <div className="flex justify-between pb-7">
+        <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
           <Filter
             textfilter="Filtrar alimentos"
             onFilterChange={handleFilterChangeFood}
@@ -73,7 +64,12 @@ function Page() {
             fields={[
               { type: "text", name: "imageUrl", placeholder: "URL da Imagem" },
               { type: "text", name: "name", placeholder: "Nome do Alimento" },
-              { type: "text", name: "category", placeholder: "Categoria" },
+              {
+                type: "select",
+                name: "category",
+                placeholder: "Selecione a Categoria",
+                options: ["líquido", "sólido"],
+              },
               { type: "number", name: "calories", placeholder: "Calorias" },
               {
                 type: "text",
@@ -85,43 +81,51 @@ function Page() {
         </div>
         <Table.Root>
           <Table.Header>
-            {titles.map((item) => (
-              <Table.Cell key={item.name} textcell={item.name} />
+            {(isMobile
+              ? ["Nome", "Ativo", "Quantia"]
+              : [
+                  "Imagem",
+                  "Nome",
+                  "Categoria",
+                  "Calorias",
+                  "Valor Nutricional",
+                  "Ativo",
+                  "Ações",
+                  "Quantidade"
+                ]
+            ).map((item) => (
+              <Table.Cell key={item} textcell={item} />
             ))}
           </Table.Header>
           <Table.Body>
-            {filteredFoods.length > 0 ? (
-              filteredFoods.map((food) => (
-                <Table.Row key={food.id}>
-                  <Table.Cell>
-                    <Image
-                      src={food.imageUrl}
-                      alt={food.name}
-                      width={100}
-                      height={100}
-                    />
-                  </Table.Cell>
-                  <Table.Cell textcell={food.name} />
-                  <Table.Cell textcell={food.category} />
-                  <Table.Cell textcell={food.calories.toString()} />
-                  <Table.Cell textcell={food.nutritionalValue.toString()} />
-                  <Table.Actions>
-                    <Table.Action
-                      icon={food.active ? XCircle : CheckCircle}
-                      onClick={() => handleToggleActive(food.id, food.active)}
-                  />
-                    <Table.Action
-                      icon={Trash2}
-                      onClick={() => excluirAlimento(food.id)}
-                    />
-                  </Table.Actions>
-                </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell textcell="Nenhum alimento encontrado" />
+            {filteredFoods.map((food) => (
+              <Table.Row key={food.id}>
+                {!isMobile && (
+                <Table.Cell>
+                  <Table.Image src={food.imageUrl} alt={food.name} />
+                </Table.Cell>
+                )}
+                <Table.Cell textcell={food.name} />
+                {!isMobile && (
+                  <>
+                    <Table.Cell textcell={food.category} />
+                    <Table.Cell textcell={food.calories.toString()} />
+                    <Table.Cell textcell={food.nutritionalValue.toString()} />
+                  </>
+                )}
+                <Table.Action
+                  icon={food.active ? XCircle : CheckCircle}
+                  onClick={() => handleToggleActive(food.id, food.active)}
+                />
+                {!isMobile && (
+                <Table.Action
+                  icon={Trash2}
+                  onClick={() => excluirAlimento(food.id)}
+                />
+              )}
+                <Table.Cell textcell={food.amount.toString()} />
               </Table.Row>
-            )}
+            ))}
           </Table.Body>
         </Table.Root>
       </div>
