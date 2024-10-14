@@ -29,7 +29,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({ children }: TableHeaderProps) => {
-  return <div className="flex justify-between items-center w-full px-2 md:px-4 font-semibold">{children}</div>;
+  return <div className="flex justify-around md:justify-between items-center w-full px-2 md:px-4 font-semibold">{children}</div>;
 };
 
 // TableRow Component
@@ -38,7 +38,7 @@ interface TableRowProps {
 }
 
 const TableRow = ({ children }: TableRowProps) => {
-  return <div className="flex justify-between items-center w-full border-t px-2 md:px-4">{children}</div>;
+  return <div className="flex justify-around md:justify-between items-center w-full border-t px-2 md:px-4">{children}</div>;
 };
 
 // TableCell Component
@@ -49,7 +49,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="size-table py-2 text-start">
+    <div className="size-table py-2 text-start text-wrap">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
