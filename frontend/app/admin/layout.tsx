@@ -12,7 +12,7 @@ export default function RootLayout({
           <Header menu={true} links={[
             { name: "Adicionar Usuário", link: "#adicionarusuario" },
             { name: "Adicionar Alimento", link: "/admin/#adicionarcomida" },
-            { name: "Tela TV", link: "/admin/telagrande" },
+            { name: "Tela TV", link: "/kitchen/telagrande" },
             ]}/>
         </header>
           {children}
