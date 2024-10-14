@@ -6,4 +6,5 @@ export interface Food {
     nutritionalValue: number;
     imageUrl: string; 
     active: boolean;
+    amount: number;
   }

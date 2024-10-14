@@ -34,13 +34,16 @@ export const deleteFood = async (
 export const toggleActiveFood = async (id: number, isActive: boolean) => {
   try {
     // O valor de "isActive" aqui indica se o alimento está ativo ou inativo
-    const response = await fetch(`http://localhost/food/active-true/${isActive ? 0 : 1}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }), // Envia o id do alimento no corpo da requisição
-    });
+    const response = await fetch(
+      `http://localhost/food/active-true/${isActive ? 0 : 1}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }), // Envia o id do alimento no corpo da requisição
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Erro ao alterar o status do alimento");
@@ -49,3 +52,4 @@ export const toggleActiveFood = async (id: number, isActive: boolean) => {
     console.error("Erro ao alterar o status do alimento:", error);
   }
 };
+
