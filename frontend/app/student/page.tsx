@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { Food } from "../interface/Food";
-import { fetchFoods } from "@/lib/services/food/foodService"; // fetchFoods para buscar os alimentos
+import { fetchFoods } from "@/lib/services/food/foodService"; // Função para buscar alimentos
 import Image from "next/image";
 import { Card, CardHeader, CardTitle } from "../_components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../_components/ui/dialog";
+import IncrementDecrement from "../_components/increment-decrement";
+
 
 function Page() {
   const [foods, setFoods] = useState<Food[]>([]);
+
   useEffect(() => {
     const loadFoods = async () => {
       try {
@@ -26,26 +29,26 @@ function Page() {
       {foods.map((food) => (
         <Card key={food.id} className="py-2 px-4">
           <CardHeader className="flex justify-between items-center mb-3">
-              <CardTitle>{food.name}</CardTitle>
-              <Dialog>
-                <DialogTrigger className="flex flex-col gap-[2px]">
-                  <div className="w-1 h-1 bg-primary rounded-full" />
-                  <div className="w-1 h-1 bg-primary rounded-full" />
-                  <div className="w-1 h-1 bg-primary rounded-full" />
-                </DialogTrigger>
-                <DialogContent>
+            <CardTitle>{food.name}</CardTitle>
+            <Dialog>
+              <DialogTrigger className="flex flex-col gap-[2px]">
+                <div className="w-1 h-1 bg-primary rounded-full" />
+                <div className="w-1 h-1 bg-primary rounded-full" />
+                <div className="w-1 h-1 bg-primary rounded-full" />
+              </DialogTrigger>
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Informações sobre {food.name}</DialogTitle>
                 </DialogHeader>
-                  <h1>Valor Nutricional : {food.nutritionalValue.toString()}</h1>
-                  <h1>Calorias (100g) : {food.calories.toString()}</h1>
-                </DialogContent>
-              </Dialog>
+                <h1>Valor Nutricional: {food.nutritionalValue.toString()}</h1>
+                <h1>Calorias (100g): {food.calories.toString()}</h1>
+              </DialogContent>
+            </Dialog>
           </CardHeader>
-          <Image src={food.imageUrl} alt={food.name} width={100} height={100} />
+          <Image src={food.imageUrl} className="w-28 h-28" alt={food.name} width={100} height={100} />
+          <IncrementDecrement foodId={food.id} initialCount={1} />
         </Card>
-
-          ))}
+      ))}
     </div>
   );
 }
