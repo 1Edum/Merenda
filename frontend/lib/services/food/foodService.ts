@@ -1,6 +1,6 @@
-// services/foodService.ts
 import { Food } from "@/app/interface/Food";
 
+// Função para buscar alimentos
 export const fetchFoods = async () => {
   const response = await fetch("http://localhost/food/listar");
   if (!response.ok) {
@@ -9,6 +9,7 @@ export const fetchFoods = async () => {
   return response.json();
 };
 
+// Função para excluir alimentos
 export const deleteFood = async (
   id: number,
   setFoods: React.Dispatch<React.SetStateAction<Food[]>>
@@ -18,7 +19,6 @@ export const deleteFood = async (
       method: "DELETE",
     });
     if (response.ok) {
-      // Correção: Tipar corretamente a função callback do setFoods
       setFoods((prevFoods: Food[]) =>
         prevFoods.filter((food) => food.id !== id)
       );
@@ -31,9 +31,9 @@ export const deleteFood = async (
   }
 };
 
+// Função para alternar o status do alimento (ativo/inativo)
 export const toggleActiveFood = async (id: number, isActive: boolean) => {
   try {
-    // O valor de "isActive" aqui indica se o alimento está ativo ou inativo
     const response = await fetch(
       `http://localhost/food/active-true/${isActive ? 0 : 1}`,
       {
@@ -41,10 +41,9 @@ export const toggleActiveFood = async (id: number, isActive: boolean) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }), // Envia o id do alimento no corpo da requisição
+        body: JSON.stringify({ id }),
       }
     );
-
     if (!response.ok) {
       throw new Error("Erro ao alterar o status do alimento");
     }
@@ -53,3 +52,23 @@ export const toggleActiveFood = async (id: number, isActive: boolean) => {
   }
 };
 
+// Função para enviar a quantidade de alimento
+export const submitFoodAmount = async (foodId: number, newCount: number) => {
+  try {
+    const response = await fetch("/food/amount", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ foodId, amount: newCount }),
+    });
+
+    if (response.ok) {
+      console.log("Quantidade enviada com sucesso!");
+    } else {
+      console.error("Erro ao enviar a quantidade.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+};
