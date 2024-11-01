@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,5 +63,20 @@ public class FoodRestController {
             food1.setActive(Boolean.TRUE);
         }
         foodRepository.save(food1);
+    }
+
+    @PutMapping("/update-amount/{id}")
+    public ResponseEntity<Food> updateAmount(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
+        Integer amountToAdd = request.get("amount"); // Obtemos a quantidade a ser adicionada
+        Optional<Food> foodOptional = foodRepository.findById(id); // Busca o alimento pelo ID
+
+        if (foodOptional.isPresent()) {
+            Food food = foodOptional.get(); // Obtém o alimento
+            food.setAmount(food.getAmount() + amountToAdd); // Soma a nova quantidade à quantidade existente
+            foodRepository.save(food); // Salva a nova quantidade no banco de dados
+            return ResponseEntity.ok(food); // Retorna o alimento atualizado
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna NOT FOUND se o alimento não existir
+        }
     }
 }
