@@ -139,7 +139,6 @@ function DialogComponent({
             )
           )}
           <DialogFooter>
-            <Button variant="outline" type="button">Cancelar</Button>
             <Button variant="destructive" type="button" onClick={handleSubmit}>Salvar</Button>
           </DialogFooter>
         </form>
