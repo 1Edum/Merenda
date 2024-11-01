@@ -14,15 +14,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      
       <body>
       <header>
         <Header menu={true} links={[
             { name: "Adicionar Alimento", link: "/kitchen/#adicionarcomida" },
             { name: "Tela TV", link: "/kitchen/telagrande" },
+            { name: "Desperdício", link: "/kitchen/rest" },
             ]}/>
       </header>
-        {children}</body>
+        {children}
+      </body>
     </html>
   )
 }
