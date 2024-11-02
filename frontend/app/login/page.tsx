@@ -1,48 +1,29 @@
 "use client";
 
-import { useRouter } from 'next/navigation'; // Certifique-se de importar do 'next/navigation' no Next.js 13+
-import { jwtDecode } from 'jwt-decode';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/app/_components/ui/button';
 import { Input } from '@/app/_components/ui/input';
 import React, { useState } from 'react';
+import { loginUser } from '@/lib/services/authService';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); // Agora você pode usar o router corretamente
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: email, password }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.accessToken;
-  
-        // Decodifica o token JWT
-        const decoded: any = jwtDecode(token);
-  
-        // Exibe o token decodificado no console para inspecionar o conteúdo
-        console.log("Token decodificado:", decoded);
-  
-        // Redireciona com base no campo roles
-        if (decoded.roles && decoded.roles.includes('ADMIN')) {
-          router.push('/admin');
-        } else if (decoded.roles && decoded.roles.includes('STUDENT')) {
-          router.push('/student');
-        } else if (decoded.roles && decoded.roles.includes('KITCHEN')) {
-          router.push('/kitchen');
-        } else {
-          console.error('Role não encontrada no token.');
-        }
+      const { decoded } = await loginUser(email, password);
+
+      // Redireciona com base no campo roles
+      if (decoded.roles && decoded.roles.includes('Administrator')) {
+        router.push('/admin');
+      } else if (decoded.roles && decoded.roles.includes('Student')) {
+        router.push('/student');
+      } else if (decoded.roles && decoded.roles.includes('Kitchen')) {
+        router.push('/kitchen');
       } else {
-        console.error('Erro ao fazer login.');
+        console.error('Role não encontrada no token.');
       }
     } catch (error) {
       console.error('Erro na requisição:', error);
