@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,7 @@ interface DialogComponentProps {
   descriptioninfo: string;
   fields: Field[]; // Campos dinâmicos
   apiEndpoint: string; // Endpoint da API
+  link?: ReactElement;
 }
 
 function DialogComponent({
@@ -37,6 +38,7 @@ function DialogComponent({
   descriptioninfo,
   fields,
   apiEndpoint,
+  link
 }: DialogComponentProps) {
   const [formData, setFormData] = useState<{ [key: string]: any }>({ roles: [] });
 
@@ -106,6 +108,7 @@ function DialogComponent({
         <DialogHeader>
           <DialogTitle>{addinfo}</DialogTitle>
           <DialogDescription>{descriptioninfo}</DialogDescription>
+          <DialogDescription>{link}</DialogDescription>
         </DialogHeader>
         <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
           {fields.map((field) =>

@@ -26,7 +26,7 @@ function Filter({textfilter, onFilterChange}: FilterProps) {
             onChange={(e) => setFilterValue(e.target.value)} // Atualiza o estado do filtro
           />
           <Button variant={"destructive"} className='h-9 md:h-10' onClick={handleFilterClick}>
-            <Search className="mr-3 w-5 h-5" /> Filtrar Resultados
+            <Search className="mr-3 w-5 h-5" /> Filter Results
           </Button>
         </div>
       );
