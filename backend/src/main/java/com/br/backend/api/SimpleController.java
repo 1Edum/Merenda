@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("")
 public class SimpleController {
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('Administrator')")
     @GetMapping("/admin")
     public ResponseEntity<String> helloAdmin(){
-        return ResponseEntity.ok("Hello Admin");
+        return ResponseEntity.ok("");
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('Student')")
     @GetMapping("/student")
     public ResponseEntity<String> helloUser(){
-        return ResponseEntity.ok("Hello User");
+        return ResponseEntity.ok("");
     }
 
-    @PreAuthorize("hasRole('KITCHEN')")
+    @PreAuthorize("hasRole('Kitchen')")
     @GetMapping("/kitchen")
     public ResponseEntity<String> helloKitchen(){
-        return ResponseEntity.ok("Hello User");
+        return ResponseEntity.ok("");
     }
 }
