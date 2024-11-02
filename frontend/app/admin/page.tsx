@@ -15,6 +15,7 @@ import {
 } from "@/lib/services/food/foodService";
 import { fetchUsers, handleExcluirUser } from "@/lib/services/user/userService";
 import { TableMobile } from "@/lib/help-mobile/table-mobile";
+import Link from "next/link";
 
 export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
@@ -78,78 +79,22 @@ export default function Page() {
       <div className="border rounded-lg my-7" id="adicionarcomida">
         <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
           <Filter
-            textfilter="Filtrar usuários"
+            textfilter="Filter users"
             onFilterChange={handleFilterChangeUser}
           />
           <DialogComponent
-            addinfo="Adicionar Usuário"
-            descriptioninfo="Preencha as informações do usuário"
+            addinfo="Add User"
+            descriptioninfo="Fill in the user information"
             apiEndpoint="http://localhost/user/inserir"
             fields={[
-              { type: "text", name: "username", placeholder: "Nome" },
+              { type: "text", name: "username", placeholder: "Name" },
               { type: "text", name: "email", placeholder: "Email" },
-              { type: "password", name: "password", placeholder: "Senha" },
+              { type: "password", name: "password", placeholder: "Password" },
               {
                 type: "select",
                 name: "role",
-                placeholder: "Selecione uma função",
-                options: ["STUDENT", "KITCHEN", "ADMIN"],
-              },
-            ]}
-          />
-        </div>
-          <Table.Root>
-            <Table.Header>
-              {(isMobile
-                ? ["Nome", "Profissão", "Ações"]
-                : ["Nome", "Email", "Profissão", "Ações"]
-              ).map((item) => (
-                <Table.Cell key={item} textcell={item} />
-              ))}
-            </Table.Header>
-            <Table.Body>
-              {filteredUsers.map((user) => (
-                <Table.Row key={user.id}>
-                  <Table.Cell textcell={user.username} />
-                  {!isMobile && <Table.Cell textcell={user.email} />}
-                  <Table.Cell
-                    textcell={user.roles.map((role) => role.name).join(", ")}
-                  />
-                  <Table.Action
-                    icon={Trash2}
-                    onClick={() => handleExcluirUser(user.id, setUsers)}
-                  />
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-      </div>
-
-      {/* Seção de alimentos*/}
-      <div className="border rounded-lg my-7" id="adicionarcomida">
-        <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
-          <Filter
-            textfilter="Filtrar alimentos"
-            onFilterChange={handleFilterChangeFood}
-          />
-          <DialogComponent
-            addinfo="Adicionar Alimento"
-            descriptioninfo="Preencha as informações do alimento"
-            apiEndpoint="http://localhost/food/inserir"
-            fields={[
-              { type: "text", name: "imageUrl", placeholder: "URL da Imagem" },
-              { type: "text", name: "name", placeholder: "Nome do Alimento" },
-              {
-                type: "select",
-                name: "category",
-                placeholder: "Selecione a Categoria",
-                options: ["líquido", "sólido"],
-              },
-              { type: "number", name: "calories", placeholder: "Calorias" },
-              {
-                type: "text",
-                name: "nutritionalValue",
-                placeholder: "Valor Nutricional",
+                placeholder: "Select a function",
+                options: ["Student", "Kitchen", "Administrator"],
               },
             ]}
           />
@@ -157,16 +102,81 @@ export default function Page() {
         <Table.Root>
           <Table.Header>
             {(isMobile
-              ? ["Nome", "Ativo", "Quantia"]
+              ? ["Name", "Profession", "Actions"]
+              : ["Name", "Email", "Profession", "Actions"]
+            ).map((item) => (
+              <Table.Cell key={item} textcell={item} />
+            ))}
+          </Table.Header>
+          <Table.Body>
+            {filteredUsers.map((user) => (
+              <Table.Row key={user.id}>
+                <Table.Cell textcell={user.username} />
+                {!isMobile && <Table.Cell textcell={user.email} />}
+                <Table.Cell
+                  textcell={user.roles.map((role) => role.name).join(", ")}
+                />
+                <Table.Action
+                  icon={Trash2}
+                  onClick={() => handleExcluirUser(user.id, setUsers)}
+                />
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </div>
+
+      {/* Seção de alimentos*/}
+      <div className="border rounded-lg my-7" id="adicionarcomida">
+        <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
+          <Filter
+            textfilter="Filter food"
+            onFilterChange={handleFilterChangeFood}
+          />
+          <DialogComponent
+            addinfo="Add Food"
+            descriptioninfo="Fill in the food information"
+            apiEndpoint="http://localhost/food/inserir"
+            link={
+              <Link
+                href={"https://www.pexels.com/pt-br/"}
+                target="_blank"
+                className="underline-offset-1 underline text-blue-600"
+              >
+                Link para pegar Imagem
+              </Link>
+            }
+            fields={[
+              { type: "text", name: "imageUrl", placeholder: "Image URL" },
+              { type: "text", name: "name", placeholder: "Food Name" },
+              {
+                type: "select",
+                name: "category",
+                placeholder: "Select Category",
+                options: ["Breakfast", "Lunch", "Afternoon Coffee"],
+              },
+              { type: "number", name: "calories", placeholder: "Calories" },
+              {
+                type: "text",
+                name: "nutritionalValue",
+                placeholder: "Nutritional Value",
+              },
+            ]}
+          />
+        </div>
+        <Table.Root>
+          <Table.Header>
+            {(isMobile
+              ? ["Name", "Asset", "Amount"]
               : [
-                  "Imagem",
-                  "Nome",
-                  "Categoria",
-                  "Calorias",
-                  "Valor Nutricional",
-                  "Ativo",
-                  "Ações",
-                  "Quantidade"
+                  "Image",
+                  "Name",
+                  "Category",
+                  "Calories",
+                  "Nutritional Value",
+                  "Active",
+                  "Shares",
+                  "Quantity",
                 ]
             ).map((item) => (
               <Table.Cell key={item} textcell={item} />
@@ -176,9 +186,9 @@ export default function Page() {
             {filteredFoods.map((food) => (
               <Table.Row key={food.id}>
                 {!isMobile && (
-                <Table.Cell>
-                  <Table.Image src={food.imageUrl} alt={food.name} />
-                </Table.Cell>
+                  <Table.Cell>
+                    <Table.Image src={food.imageUrl} alt={food.name} />
+                  </Table.Cell>
                 )}
                 <Table.Cell textcell={food.name} />
                 {!isMobile && (
@@ -193,18 +203,17 @@ export default function Page() {
                   onClick={() => handleToggleActive(food.id, food.active)}
                 />
                 {!isMobile && (
-                <Table.Action
-                  icon={Trash2}
-                  onClick={() => excluirAlimento(food.id)}
-                />
-              )}
+                  <Table.Action
+                    icon={Trash2}
+                    onClick={() => excluirAlimento(food.id)}
+                  />
+                )}
                 <Table.Cell textcell={food.amount.toString()} />
               </Table.Row>
             ))}
           </Table.Body>
         </Table.Root>
       </div>
-
       <ScrollToTopButton />
     </div>
   );
