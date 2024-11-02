@@ -9,6 +9,7 @@ import { deleteFood, fetchFoods, toggleActiveFood } from "@/lib/services/food/fo
 import { Trash2, CheckCircle, XCircle } from "lucide-react";
 import ScrollToTopButton from "../_components/scroll-button";
 import { TableMobile } from "@/lib/help-mobile/table-mobile";
+import Link from "next/link";
 
 function Page() {
   const [foodFilter, setFoodFilter] = useState("");
@@ -54,27 +55,36 @@ function Page() {
       <div className="border rounded-lg my-7" id="adicionarcomida">
         <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
           <Filter
-            textfilter="Filtrar alimentos"
+            textfilter="Filter food"
             onFilterChange={handleFilterChangeFood}
           />
           <DialogComponent
-            addinfo="Adicionar Alimento"
-            descriptioninfo="Preencha as informações do alimento"
+            addinfo="Add Food"
+            descriptioninfo="Fill in the food information"
             apiEndpoint="http://localhost/food/inserir"
+            link={
+              <Link
+                href={"https://www.pexels.com/pt-br/"}
+                target="_blank"
+                className="underline-offset-1 underline text-blue-600"
+              >
+                Link para pegar Imagem
+              </Link>
+            }
             fields={[
-              { type: "text", name: "imageUrl", placeholder: "URL da Imagem" },
-              { type: "text", name: "name", placeholder: "Nome do Alimento" },
+              { type: "text", name: "imageUrl", placeholder: "Image URL" },
+              { type: "text", name: "name", placeholder: "Food Name" },
               {
                 type: "select",
                 name: "category",
-                placeholder: "Selecione a Categoria",
-                options: ["líquido", "sólido"],
+                placeholder: "Select Category",
+                options: ["Breakfast", "Lunch", "Afternoon Coffee"],
               },
-              { type: "number", name: "calories", placeholder: "Calorias" },
+              { type: "number", name: "calories", placeholder: "Calories" },
               {
                 type: "text",
                 name: "nutritionalValue",
-                placeholder: "Valor Nutricional",
+                placeholder: "Nutritional Value",
               },
             ]}
           />
@@ -82,16 +92,16 @@ function Page() {
         <Table.Root>
           <Table.Header>
             {(isMobile
-              ? ["Nome", "Ativo", "Quantia"]
+              ? ["Name", "Asset", "Amount"]
               : [
-                  "Imagem",
-                  "Nome",
-                  "Categoria",
-                  "Calorias",
-                  "Valor Nutricional",
-                  "Ativo",
-                  "Ações",
-                  "Quantidade"
+                  "Image",
+                  "Name",
+                  "Category",
+                  "Calories",
+                  "Nutritional Value",
+                  "Active",
+                  "Shares",
+                  "Quantity",
                 ]
             ).map((item) => (
               <Table.Cell key={item} textcell={item} />
@@ -101,9 +111,9 @@ function Page() {
             {filteredFoods.map((food) => (
               <Table.Row key={food.id}>
                 {!isMobile && (
-                <Table.Cell>
-                  <Table.Image src={food.imageUrl} alt={food.name} />
-                </Table.Cell>
+                  <Table.Cell>
+                    <Table.Image src={food.imageUrl} alt={food.name} />
+                  </Table.Cell>
                 )}
                 <Table.Cell textcell={food.name} />
                 {!isMobile && (
@@ -118,11 +128,11 @@ function Page() {
                   onClick={() => handleToggleActive(food.id, food.active)}
                 />
                 {!isMobile && (
-                <Table.Action
-                  icon={Trash2}
-                  onClick={() => excluirAlimento(food.id)}
-                />
-              )}
+                  <Table.Action
+                    icon={Trash2}
+                    onClick={() => excluirAlimento(food.id)}
+                  />
+                )}
                 <Table.Cell textcell={food.amount.toString()} />
               </Table.Row>
             ))}
