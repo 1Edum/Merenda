@@ -1,13 +1,12 @@
 
-import FoodItem from '@/app/_components/food-item'
+import FoodList from '@/app/_components/food-list'
 import React from 'react'
 
 function page() {
   return (
-    <div  className='p-2'>
-      <h3>Café da Manhã</h3>
-      <FoodItem category='almoco' bg='bg-green-400' text='Quero'/>
-    </div>
+    <div className="lg:px-24">
+    <FoodList category="Lunch" />
+  </div>
   )
 }
 
