@@ -8,6 +8,7 @@ import { fetchFoods, deleteFood, toggleActiveFood } from "@/lib/services/food/fo
 import Filter from "../_components/table-infos/filter";
 import DialogComponent from "../_components/table-infos/dialog-component";
 import { TableMobile } from "@/lib/help-mobile/table-mobile";
+import Link from "next/link";
 
 const FoodSection = () => {
   const [foodFilter, setFoodFilter] = useState("");
@@ -63,6 +64,15 @@ const FoodSection = () => {
             { type: "number", name: "calories", placeholder: "Calories" },
             { type: "text", name: "nutritionalValue", placeholder: "Nutritional Value" },
           ]}
+          link={
+            <Link
+              href={"https://www.pexels.com/pt-br/"}
+              target="_blank"
+              className="underline-offset-1 underline text-blue-600"
+            >
+              Link to get Image
+            </Link>
+          }
         />
       </div>
       <Table.Root>
