@@ -79,7 +79,7 @@ const FoodSection = () => {
         <Table.Header>
           {(isMobile
             ? ["Name", "Asset", "Amount"]
-            : ["Image", "Name", "Category", "Calories", "Nutritional Value", "Active", "Shares", "Quantity"]
+            : ["Image", "Name", "Category", "Calories", "Nutritional Value", "Active", "Actions", "Quantity"]
           ).map((item) => (
             <Table.Cell key={item} textcell={item} />
           ))}
