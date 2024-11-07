@@ -31,6 +31,7 @@ interface DialogComponentProps {
   fields: Field[]; // Campos dinâmicos
   apiEndpoint: string; // Endpoint da API
   link?: ReactElement;
+  menuCategory?: boolean;
 }
 
 function DialogComponent({
@@ -38,17 +39,17 @@ function DialogComponent({
   descriptioninfo,
   fields,
   apiEndpoint,
-  link
+  link,
+  menuCategory,
 }: DialogComponentProps) {
-  const [formData, setFormData] = useState<{ [key: string]: any }>({ roles: [] });
+  const [formData, setFormData] = useState<{ [key: string]: any }>({ categories: [] });
 
   // Atualiza o estado dos campos dinamicamente
   const handleInputChange = (name: string, value: string) => {
-    console.log(`Campo: ${name}, Valor: ${value}`); // Para depuração
-    if (name === "role") {
+    if (name === "category") {
       setFormData((prevData) => ({
         ...prevData,
-        roles: [{ name: value }], // Formato esperado pelo backend
+        categories: [...prevData.categories, value], // Adiciona nova categoria
       }));
     } else {
       setFormData((prevData) => ({
@@ -58,9 +59,14 @@ function DialogComponent({
     }
   };
 
-  // Função para enviar os dados do formulário
+  const removeCategory = (value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      categories: prevData.categories.filter((category: string) => category !== value),
+    }));
+  };
+
   const handleSubmit = async () => {
-    // Validação básica para garantir que todos os campos estejam preenchidos
     for (const field of fields) {
       if (!formData[field.name] && field.type !== "select") {
         alert(`Preencha o campo: ${field.placeholder}`);
@@ -68,16 +74,13 @@ function DialogComponent({
       }
     }
 
-    console.log('Dados a serem enviados:', formData); // Para depuração
-
-    // Envia os dados do formulário para o endpoint especificado
     try {
       const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Envia os dados do formulário como JSON
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -86,22 +89,16 @@ function DialogComponent({
 
       const data = await response.json();
       console.log('Dados adicionados com sucesso:', data);
-      // Limpa os campos após o sucesso
-      setFormData({ roles: [] });
-    } catch (error: unknown) {
+      setFormData({ categories: [] });
+    } catch (error) {
       console.error('Erro ao adicionar dados:', error);
-    
-      if (error instanceof Error) {
-        alert(`Erro: ${error.message}`); // Mostra a mensagem de erro se for uma instância de Error
-      } else {
-        alert('Ocorreu um erro desconhecido.'); // Caso não seja uma instância de Error
-      }
+      alert(`Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   };
 
   return (
     <Dialog>
-      <DialogTrigger className='bg-destructive text-destructive-foreground hover:bg-destructive/90 flex items-center px-4 py-2 rounded-lg'>
+      <DialogTrigger className="bg-destructive text-destructive-foreground hover:bg-destructive/90 flex items-center px-4 py-2 rounded-lg">
         {addinfo}
       </DialogTrigger>
       <DialogContent>
@@ -115,10 +112,7 @@ function DialogComponent({
             field.type === 'select' ? (
               <Select
                 key={field.name}
-                onValueChange={(value) => {
-                  console.log(`Valor do select mudado para: ${value}`); // Para depuração
-                  handleInputChange(field.name, value);
-                }}
+                onValueChange={(value) => handleInputChange(field.name, value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder={field.placeholder} />
@@ -141,8 +135,28 @@ function DialogComponent({
               />
             )
           )}
+          {menuCategory && (
+            <div>
+            <h4>Categorias Selecionadas:</h4>
+            {formData.categories.map((category: string) => (
+              <div key={category} className="flex items-center justify-between space-y-2 space-x-2">
+                <span>{category}</span>
+                <Button
+                  variant="destructive"
+                  type="button"
+                  onClick={() => removeCategory(category)}
+                >
+                  Remover
+                </Button>
+              </div>
+            ))}
+          </div>
+          )}
+          
           <DialogFooter>
-            <Button variant="destructive" type="button" onClick={handleSubmit}>Salvar</Button>
+            <Button variant="destructive" type="button" onClick={handleSubmit}>
+              Salvar
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
