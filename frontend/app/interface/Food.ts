@@ -1,10 +1,10 @@
 export interface Food {
-    id: number; // Assumindo que o ID é numérico, ajuste conforme a sua API
-    name: string;
-    category: string;
-    calories: number;
-    nutritionalValue: number;
-    imageUrl: string; 
-    active: boolean;
-    amount: number;
-  }
+  id: number;
+  name: string;
+  categories: string[];
+  calories: number;
+  nutritionalValue: string;
+  imageUrl: string; 
+  active: boolean;
+  amount: number;
+}

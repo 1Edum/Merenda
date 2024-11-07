@@ -49,7 +49,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="size-table py-2 text-start text-wrap">
+    <div className="size-table py-2 px-4 text-start text-wrap">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
