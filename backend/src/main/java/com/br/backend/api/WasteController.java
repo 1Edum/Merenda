@@ -26,5 +26,10 @@ public class WasteController {
         Waste wasteInserido = wasteRepository.save(waste);
         return ResponseEntity.ok(wasteInserido);
     }
+    @DeleteMapping("/deletar/{id}")
+    UserController deletar(@PathVariable long id) {
+        wasteRepository.deleteById(id);
+        return new UserController();
+    }
 
 }
