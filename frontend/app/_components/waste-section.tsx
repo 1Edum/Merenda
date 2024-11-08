@@ -64,7 +64,7 @@ function WasteSection() {
       </div>
       <Table.Root>
         <Table.Header>
-          {["Date", "Amount", "Actions"].map((item) => (
+          {["Date", "Amount(Kg)", "Actions"].map((item) => (
             <Table.Cell key={item} textcell={item} />
           ))}
         </Table.Header>
