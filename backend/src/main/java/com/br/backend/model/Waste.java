@@ -16,6 +16,6 @@ public class Waste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String date;
     private Double amount;
 }
