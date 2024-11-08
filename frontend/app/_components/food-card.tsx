@@ -12,6 +12,9 @@ interface FoodCardProps {
 }
 
 const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
+  // Exibe o card apenas se o alimento estiver ativo
+  if (food.active) return null;
+
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (

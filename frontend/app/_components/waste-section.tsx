@@ -5,8 +5,9 @@ import DialogComponent from './table-infos/dialog-component';
 import Filter from './table-infos/filter';
 import { Table } from './table-infos/table';
 import { Trash2 } from 'lucide-react';
-import { Waste } from '../interface/Wast';
-import { deleteWaste, fetchWastes } from '@/lib/waste/wasteService';
+import { Waste } from '../interface/Waste';
+import { deleteWaste, fetchWastes } from '@/lib/services/waste/wasteService';
+
 
 function WasteSection() {
   const [wastes, setWastes] = useState<Waste[]>([]);
