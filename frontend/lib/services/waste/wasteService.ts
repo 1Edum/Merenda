@@ -1,8 +1,7 @@
-import { Waste } from "@/app/interface/Wast";
+import { Waste } from "@/app/interface/Waste";
 
-const API_URL = "http://localhost/waste"; // URL base da API
+const API_URL = "http://localhost/waste";
 
-// Função para buscar a lista de desperdícios
 export async function fetchWastes(): Promise<Waste[]> {
   try {
     const response = await fetch(`${API_URL}/listar`);
@@ -14,7 +13,6 @@ export async function fetchWastes(): Promise<Waste[]> {
   }
 }
 
-// Função para adicionar um novo desperdício
 export async function addWaste(wasteData: Omit<Waste, "id">): Promise<Waste> {
   try {
     const response = await fetch(`${API_URL}/inserir`, {
@@ -33,9 +31,9 @@ export async function addWaste(wasteData: Omit<Waste, "id">): Promise<Waste> {
 }
 
 // Função para excluir um desperdício pelo ID
-export async function deleteWaste(wasteId: number): Promise<void> {
+export async function deleteWaste(id: number): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/excluir/${wasteId}`, {
+    const response = await fetch(`${API_URL}/deletar/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Erro ao excluir desperdício");
