@@ -1,26 +1,12 @@
 import React, { ButtonHTMLAttributes, ElementType, ReactNode } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 import Image, { ImageProps } from 'next/image';
 
-// TableRoot Component
-const TableRootVariants = cva(
-  'flex flex-col w-full border rounded-lg bg-zinc-100',
-  {
-    variants: {
-      variant: {
-        default: '',
-      },
-    },
-  }
-);
-
-interface TableRootProps extends VariantProps<typeof TableRootVariants> {
+interface TableRootProps {
   children: ReactNode;
 }
 
-const TableRoot = ({ children, variant }: TableRootProps) => {
-  return <div className={cn(TableRootVariants({ variant }))}>{children}</div>;
+const TableRoot = ({ children }: TableRootProps) => {
+  return <div className="flex flex-col w-full border rounded-lg bg-zinc-100">{children}</div>;
 };
 
 // TableHeader Component
@@ -29,7 +15,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({ children }: TableHeaderProps) => {
-  return <div className="flex justify-around md:justify-between items-center w-full px-2 md:px-4 font-semibold">{children}</div>;
+  return <div className="flex justify-around md:justify-between items-center w-full font-semibold">{children}</div>;
 };
 
 // TableRow Component
@@ -38,7 +24,7 @@ interface TableRowProps {
 }
 
 const TableRow = ({ children }: TableRowProps) => {
-  return <div className="flex justify-around md:justify-between items-center w-full border-t px-2 md:px-4">{children}</div>;
+  return <div className="flex justify-around md:justify-between items-center w-full">{children}</div>;
 };
 
 // TableCell Component
@@ -49,7 +35,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="size-table py-2 px-4 text-start text-wrap">
+    <div className="size-table text-start text-wrap">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
@@ -66,7 +52,7 @@ return <button className='size-table' {...rest}><Icon /></button>
 interface TableImageProps extends ImageProps {}
 
 const TableImage = ({ ...rest }: TableImageProps) => {
-  return <Image {...rest} width={100} height={100}/>;
+  return <Image {...rest} width={176} height={10} className='size-table ' />;
 };
 // TableBody Component
 interface TableBodyProps {
