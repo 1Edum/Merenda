@@ -44,6 +44,32 @@ public class FoodRestController {
         foodRepository.saveAll(foods);
     }
 
+    @PutMapping("/modificar")
+    public ResponseEntity<Food> modificarFood(@RequestBody Food food) {
+        // Verifique se o alimento com o ID especificado existe no banco de dados
+        Optional<Food> existingFood = foodRepository.findById(food.getId());
+
+        if (existingFood.isPresent()) {
+            // Atualize os detalhes do alimento com as informações fornecidas
+            Food updatedFood = existingFood.get();
+            updatedFood.setName(food.getName());
+            updatedFood.setCategories(food.getCategories());
+            updatedFood.setCalories(food.getCalories());
+            updatedFood.setNutritionalValue(food.getNutritionalValue());
+            updatedFood.setImageUrl(food.getImageUrl());
+
+            // Salve o alimento atualizado no banco de dados
+            Food savedFood = foodRepository.save(updatedFood);
+
+            return ResponseEntity.ok(savedFood);
+        } else {
+            // Retorne 404 caso o alimento com o ID especificado não seja encontrado
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
         Optional<Food> existingFood = foodRepository.findById(id);
@@ -54,6 +80,7 @@ public class FoodRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PutMapping("/active-true/{active}")
     public void active(@PathVariable Boolean active,@RequestBody Food food){
         Food food1 = foodRepository.getOne(food.getId());
