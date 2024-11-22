@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Food } from "../interface/Food";
 import { Table } from "../_components/table-infos/table";
-import { CheckCircle, Trash2, XCircle } from "lucide-react";
-import { fetchFoods, deleteFood, toggleActiveFood } from "@/lib/services/food/foodService";
+import { CheckCircle, Trash2, XCircle, ExternalLink } from "lucide-react";
+import { fetchFoods, deleteFood, toggleActiveFood, updateFood, updateFoodCategories } from "@/lib/services/food/foodService";
 import Filter from "../_components/table-infos/filter";
 import DialogComponent from "../_components/table-infos/dialog-component";
 import { TableMobile } from "@/lib/help-mobile/table-mobile";
@@ -13,6 +13,7 @@ import Link from "next/link";
 const FoodSection = () => {
   const [foodFilter, setFoodFilter] = useState("");
   const [foods, setFoods] = useState<Food[]>([]);
+  const [foodToEdit, setFoodToEdit] = useState<Food | null>(null); // Alimento a ser editado
   const isMobile = TableMobile();
 
   useEffect(() => {
@@ -24,7 +25,6 @@ const FoodSection = () => {
         console.error("Erro ao carregar os alimentos:", error);
       }
     };
-
     loadFoods();
   }, []);
 
@@ -48,6 +48,29 @@ const FoodSection = () => {
     setFoodFilter(filterValue);
   };
 
+  const modificarAlimento = (food: Food) => {
+    setFoodToEdit(food);
+  };
+
+
+  const handleUpdateFood = async (updatedFood: Food) => {
+    try {
+      await updateFood(updatedFood, setFoods);
+      setFoodToEdit(null); 
+    } catch (error) {
+      console.error("Error updating food:", error);
+    }
+  };
+
+  const handleUpdateFoodCategoriesWrapper = async (updatedData: any) => {
+    try {
+      const { id, categories } = updatedData;
+      await updateFoodCategories(id, categories, setFoods); // Corrigido: passando setFoods
+    } catch (error) {
+      console.error("Erro ao atualizar as categorias do alimento:", error);
+    }
+  };
+  
   return (
     <div className="border rounded-lg my-7" id="adicionarcomida">
       <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
@@ -98,7 +121,26 @@ const FoodSection = () => {
                 icon={food.active ? XCircle : CheckCircle}
                 onClick={() => handleToggleActive(food.id, food.active)}
               />
-              {!isMobile && <Table.Action icon={Trash2} onClick={() => excluirAlimento(food.id)} />}
+              {!isMobile &&
+              <div className="flex size-table gap-2">
+                <Table.Action icon={Trash2} onClick={() => excluirAlimento(food.id)}/>
+                <div onClick={() => modificarAlimento(food)} className="size-table">
+                <DialogComponent
+                  icon={<ExternalLink />}
+                  addinfo="Edit Categories"
+                  descriptioninfo="Modify the food categories"
+                  apiEndpoint="http://localhost/food/modificar-categorias"
+                  method="PATCH"
+                  id={food.id}
+                  menuCategory={true}
+                  fields={[
+                    { type: "select", name: "category", placeholder: "Select Category", options: ["Breakfast", "Lunch", "Afternoon Coffee"], value: food.categories.join(", ") },
+                  ]}
+                  onSubmit={handleUpdateFoodCategoriesWrapper} // Use a função wrapper aqui
+                /> 
+                </div>
+              </div>
+              }
               <Table.Cell textcell={food.amount.toString()} />
             </Table.Row>
           ))}

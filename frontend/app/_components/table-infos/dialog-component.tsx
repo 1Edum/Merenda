@@ -19,19 +19,24 @@ import {
 import { Button } from "../ui/button";
 
 interface Field {
-  type: string; // Tipo do campo (ex: 'text', 'password', 'select', 'url')
-  name: string; // Nome do campo
-  placeholder: string; // Placeholder do campo
-  options?: string[]; // Se for um select, as opções
+  type: string;
+  name: string;
+  placeholder: string;
+  options?: string[];
+  value?: string;
 }
 
 interface DialogComponentProps {
   addinfo: string;
+  icon?: ReactElement;
   descriptioninfo: string;
   fields: Field[]; // Campos dinâmicos
   apiEndpoint: string; // Endpoint da API
   link?: ReactElement;
   menuCategory?: boolean;
+  onSubmit?: (updatedData: any) => void;
+  method?: string; // Adicionado
+  id?: number; // Adicionado
 }
 
 function DialogComponent({
@@ -41,17 +46,20 @@ function DialogComponent({
   apiEndpoint,
   link,
   menuCategory,
+  icon,
+  method = "POST",
+  id,
+  onSubmit,
 }: DialogComponentProps) {
   const [formData, setFormData] = useState<{ [key: string]: any }>({
     categories: [],
   });
 
-  // Atualiza o estado dos campos dinamicamente
   const handleInputChange = (name: string, value: string) => {
     if (name === "category") {
       setFormData((prevData) => ({
         ...prevData,
-        categories: [...prevData.categories, value], // Adiciona nova categoria
+        categories: [...prevData.categories, value],
       }));
     } else {
       setFormData((prevData) => ({
@@ -77,35 +85,39 @@ function DialogComponent({
         return;
       }
     }
-
+  
     try {
       const response = await fetch(apiEndpoint, {
-        method: "POST",
+        method, // Use o método fornecido
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...(id && { id }), ...formData }),
       });
-
+  
       if (!response.ok) {
-        throw new Error("Erro ao adicionar dados");
+        throw new Error(`Error ${response.status}: ${await response.text()}`);
       }
-
-      const data = await response.json();
-      console.log("Dados adicionados com sucesso:", data);
+  
+      if (onSubmit) {
+        await onSubmit(await response.json());
+      } else {
+        const data = await response.json();
+        console.log("Data submitted successfully:", data);
+      }
+  
       setFormData({ categories: [] });
     } catch (error) {
-      console.error("Erro ao adicionar dados:", error);
-      alert(
-        `Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`
-      );
+      console.error("Error submitting data:", error);
+      alert(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
+  
 
   return (
     <Dialog>
       <DialogTrigger className="bg-destructive text-destructive-foreground hover:bg-destructive/90 flex items-center px-4 py-2 rounded-lg">
-        {addinfo}
+        {icon} {icon ? null : addinfo}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -118,8 +130,7 @@ function DialogComponent({
             field.type === "select" ? (
               <Select
                 key={field.name}
-                onValueChange={(value) => handleInputChange(field.name, value)}
-              >
+                onValueChange={(value) => handleInputChange(field.name, value)}>
                 <SelectTrigger>
                   <SelectValue placeholder={field.placeholder} />
                 </SelectTrigger>
@@ -141,20 +152,18 @@ function DialogComponent({
               />
             )
           )}
-          {menuCategory && (
+          {menuCategory && formData.categories.length > 0 && (
             <div>
-              <h4>Selected Categories:</h4>
+              <h4>Categorias Selecionadas:</h4>
               {formData.categories.map((category: string) => (
                 <div
                   key={category}
-                  className="flex items-center justify-between space-y-2 space-x-2"
-                >
+                  className="flex items-center justify-between space-y-2 space-x-2">
                   <span>{category}</span>
                   <Button
                     variant="destructive"
                     type="button"
-                    onClick={() => removeCategory(category)}
-                  >
+                    onClick={() => removeCategory(category)}>
                     Remover
                   </Button>
                 </div>
