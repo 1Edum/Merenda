@@ -35,7 +35,7 @@ interface TableCellProps {
 
 const TableCell = ({ textcell, children }: TableCellProps) => {
   return (
-    <div className="size-table text-start text-wrap">
+    <div className="size-table text-start text-wrap py-3">
       {textcell || children} {/* Use textcell ou children */}
     </div>
   );
@@ -46,7 +46,11 @@ interface TableActionProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 }
 
 const TableAction = ({icon: Icon, ...rest}: TableActionProps) => {
-return <button className='size-table' {...rest}><Icon /></button>
+return <button className='size-table flex items-center' {...rest}>
+    <div className='bg-destructive text-destructive-foreground  px-4 py-2 w-14 rounded-lg  hover:bg-destructive/90'>
+      <Icon size={25}/>
+    </div>
+  </button>
 }
 
 interface TableImageProps extends ImageProps {}
