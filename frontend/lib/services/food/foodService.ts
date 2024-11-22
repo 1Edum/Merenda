@@ -1,74 +1,99 @@
 import { Food } from "@/app/interface/Food";
 
-// Função para buscar alimentos
-export const fetchFoods = async () => {
+export const fetchFoods = async (): Promise<Food[]> => {
   const response = await fetch("http://localhost/food/listar");
-  if (!response.ok) {
-    throw new Error("Erro ao buscar os alimentos");
-  }
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
-// Função para excluir alimentos
-export const deleteFood = async (
-  id: number,
-  setFoods: React.Dispatch<React.SetStateAction<Food[]>>
-) => {
+export const deleteFood = async (id: number, setFoods: React.Dispatch<React.SetStateAction<Food[]>>) => {
   try {
     const response = await fetch(`http://localhost/food/deletar/${id}`, {
       method: "DELETE",
     });
+
     if (response.ok) {
-      setFoods((prevFoods: Food[]) =>
-        prevFoods.filter((food) => food.id !== id)
-      );
-      alert("Alimento excluído com sucesso!");
+      setFoods((prevFoods) => prevFoods.filter((food) => food.id !== id));
+      console.log("Alimento deletado com sucesso!");
     } else {
-      console.error("Erro ao excluir o alimento:", response.statusText);
+      console.error("Erro ao deletar o alimento:", response.statusText);
     }
   } catch (error) {
-    console.error("Erro ao excluir o alimento:", error);
+    console.error("Erro ao deletar o alimento:", error);
   }
 };
 
-// Função para alternar o status do alimento (ativo/inativo)
 export const toggleActiveFood = async (id: number, isActive: boolean) => {
   try {
-    const response = await fetch(
-      `http://localhost/food/active-true/${isActive ? 0 : 1}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Erro ao alterar o status do alimento");
-    }
-  } catch (error) {
-    console.error("Erro ao alterar o status do alimento:", error);
-  }
-};
-
-// Função para enviar a quantidade de alimento
-export const submitFoodAmount = async (foodId: number, newCount: number) => {
-  try {
-    const response = await fetch("/food/amount", {
-      method: "POST",
+    const response = await fetch(`http://localhost/food/ativar/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ foodId, amount: newCount }),
+      body: JSON.stringify({ active: isActive }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao alterar o status de ativo");
+    }
+
+    console.log("Status de ativo alterado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao alterar o status de ativo:", error);
+  }
+};
+
+export const updateFood = async (
+  updatedFood: Food,
+  setFoods: React.Dispatch<React.SetStateAction<Food[]>>
+) => {
+  try {
+    const response = await fetch(`http://localhost/food/atualizar/${updatedFood.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFood),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar o alimento");
+    }
+
+    const data = await response.json();
+    setFoods((prevFoods) =>
+      prevFoods.map((food) => (food.id === updatedFood.id ? data : food))
+    );
+    console.log("Alimento atualizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao atualizar o alimento:", error);
+  }
+};
+
+export const updateFoodCategories = async (
+  id: number,
+  categories: string[],
+  setFoods: React.Dispatch<React.SetStateAction<Food[]>>
+) => {
+  try {
+    const response = await fetch("http://localhost/food/modificar-categorias", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, categories }),
     });
 
     if (response.ok) {
-      console.log("Quantidade enviada com sucesso!");
+      const updatedFood = await response.json();
+      setFoods((prevFoods) =>
+        prevFoods.map((f) => (f.id === updatedFood.id ? updatedFood : f))
+      );
+      console.log("Categorias atualizadas com sucesso!");
     } else {
-      console.error("Erro ao enviar a quantidade.");
+      console.error("Erro ao atualizar as categorias do alimento:", response.statusText);
     }
   } catch (error) {
-    console.error("Erro na requisição:", error);
+    console.error("Erro ao atualizar as categorias do alimento:", error);
   }
 };
