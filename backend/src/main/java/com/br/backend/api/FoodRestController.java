@@ -45,30 +45,31 @@ public class FoodRestController {
     }
 
     @PutMapping("/modificar")
-    public ResponseEntity<Food> modificarFood(@RequestBody Food food) {
-        // Verifique se o alimento com o ID especificado existe no banco de dados
-        Optional<Food> existingFood = foodRepository.findById(food.getId());
+    public ResponseEntity<Food> modificarFood(@RequestBody Food food)
+    { Optional<Food> existingFood = foodRepository.findById(food.getId());
+        if (existingFood.isPresent()) { Food updatedFood = existingFood.get();
+            updatedFood.setName(food.getName()); updatedFood.setCategories(food.getCategories());
+            updatedFood.setCalories(food.getCalories()); updatedFood.setNutritionalValue(food.getNutritionalValue());
+            updatedFood.setImageUrl(food.getImageUrl()); Food savedFood = foodRepository.save(updatedFood);
+            return ResponseEntity.ok(savedFood); }
+        else { return ResponseEntity.notFound().build(); } }
+
+    @PatchMapping("/modificar-categorias")
+    public ResponseEntity<Food> modificarCategorias(@RequestBody Map<String, Object> updates) {
+        Long id = ((Number) updates.get("id")).longValue();
+        Optional<Food> existingFood = foodRepository.findById(id);
 
         if (existingFood.isPresent()) {
-            // Atualize os detalhes do alimento com as informações fornecidas
-            Food updatedFood = existingFood.get();
-            updatedFood.setName(food.getName());
-            updatedFood.setCategories(food.getCategories());
-            updatedFood.setCalories(food.getCalories());
-            updatedFood.setNutritionalValue(food.getNutritionalValue());
-            updatedFood.setImageUrl(food.getImageUrl());
-
-            // Salve o alimento atualizado no banco de dados
-            Food savedFood = foodRepository.save(updatedFood);
-
-            return ResponseEntity.ok(savedFood);
+            Food food = existingFood.get();
+            if (updates.containsKey("categories")) {
+                food.setCategories((List<String>) updates.get("categories"));
+            }
+            Food updatedFood = foodRepository.save(food);
+            return ResponseEntity.ok(updatedFood);
         } else {
-            // Retorne 404 caso o alimento com o ID especificado não seja encontrado
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
