@@ -24,7 +24,7 @@ const UserSection = () => {
   };
 
   const filteredUsers = users.filter((user) =>
-    user.username?.includes(userFilter)
+    user.username?.toLowerCase().includes(userFilter.toLowerCase())
   );
 
   return (
@@ -35,26 +35,26 @@ const UserSection = () => {
           onFilterChange={handleFilterChangeUser}
         />
         <DialogComponent
-            addinfo="Add User"
-            descriptioninfo="Fill in the user information"
-            apiEndpoint="http://localhost/user/inserir"
-            fields={[
-              { type: "text", name: "username", placeholder: "Name" },
-              { type: "text", name: "email", placeholder: "Email" },
-              { type: "password", name: "password", placeholder: "Password" },
-              {
-                type: "select",
-                name: "role",
-                placeholder: "Select a function",
-                options: ["Student", "Kitchen", "Administrator"],
-              },
-            ]}
-          />
+          addinfo="Add User"
+          descriptioninfo="Fill in the user information"
+          apiEndpoint="http://localhost/user/inserir"
+          fields={[
+            { type: "text", name: "username", placeholder: "Name" },
+            { type: "text", name: "email", placeholder: "Email" },
+            { type: "password", name: "password", placeholder: "Password" },
+            {
+              type: "select",
+              name: "role",
+              placeholder: "Select a function",
+              options: ["Student", "Kitchen", "Administrator"],
+            },
+          ]}
+        />
       </div>
       <Table.Root>
         <Table.Header>
           {(isMobile
-            ? ["Name",  "Profession", "Actions"] 
+            ? ["Name", "Profession", "Actions"]
             : ["Name", "Email", "Profession", "Actions"]
           ).map((item) => (
             <Table.Cell key={item} textcell={item} />
@@ -64,11 +64,10 @@ const UserSection = () => {
           {filteredUsers.map((user) => (
             <Table.Row key={user.id}>
               <Table.Cell textcell={user.username} />
-              {!isMobile && <>
-                <Table.Cell textcell={user.email} />
-              
-              </>}
-              <Table.Cell textcell={user.roles.map((role) => role.name).join(", ")} />
+              {!isMobile && <Table.Cell textcell={user.email} />}
+              <Table.Cell
+                textcell={user.roles?.map((role) => role.name).join(", ")}
+              />
               <Table.Action
                 icon={Trash2}
                 onClick={() => handleExcluirUser(user.id, setUsers)}

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Food } from "../interface/Food";
 import { Table } from "../_components/table-infos/table";
-import { CheckCircle, Trash2, XCircle, ExternalLink } from "lucide-react";
-import { fetchFoods, deleteFood, toggleActiveFood, updateFood, updateFoodCategories } from "@/lib/services/food/foodService";
+import { CheckCircle, ExternalLink, Trash2, XCircle } from "lucide-react";
+import { fetchFoods, deleteFood, toggleActiveFood, updateFoodCategories } from "@/lib/services/food/foodService";
 import Filter from "../_components/table-infos/filter";
 import DialogComponent from "../_components/table-infos/dialog-component";
 import { TableMobile } from "@/lib/help-mobile/table-mobile";
@@ -13,8 +13,12 @@ import Link from "next/link";
 const FoodSection = () => {
   const [foodFilter, setFoodFilter] = useState("");
   const [foods, setFoods] = useState<Food[]>([]);
-  const [foodToEdit, setFoodToEdit] = useState<Food | null>(null); // Alimento a ser editado
+  const [foodToEdit, setFoodToEdit] = useState<Food | null>(null); 
   const isMobile = TableMobile();
+
+  const modificarAlimento = (food: Food) => {
+    setFoodToEdit(food);
+  };
 
   useEffect(() => {
     const loadFoods = async () => {
@@ -25,6 +29,7 @@ const FoodSection = () => {
         console.error("Erro ao carregar os alimentos:", error);
       }
     };
+
     loadFoods();
   }, []);
 
@@ -48,20 +53,7 @@ const FoodSection = () => {
     setFoodFilter(filterValue);
   };
 
-  const modificarAlimento = (food: Food) => {
-    setFoodToEdit(food);
-  };
-
-
-  const handleUpdateFood = async (updatedFood: Food) => {
-    try {
-      await updateFood(updatedFood, setFoods);
-      setFoodToEdit(null); 
-    } catch (error) {
-      console.error("Error updating food:", error);
-    }
-  };
-
+  
   const handleUpdateFoodCategoriesWrapper = async (updatedData: any) => {
     try {
       const { id, categories } = updatedData;
@@ -71,6 +63,7 @@ const FoodSection = () => {
     }
   };
   
+
   return (
     <div className="border rounded-lg my-7" id="adicionarcomida">
       <div className="flex flex-col md:flex-row justify-between pb-4 space-y-2 md:space-y-0">
@@ -102,7 +95,7 @@ const FoodSection = () => {
         <Table.Header>
           {(isMobile
             ? ["Name", "Asset", "Amount"]
-            : ["Image", "Name", "Category", "Calories", "Nutritional Value", "Active", "Actions", "Quantity"]
+            : ["Image", "Name", "Category", "Calories", "Nutritional Value", "Active", "Shares", "Quantity"]
           ).map((item) => (
             <Table.Cell key={item} textcell={item} />
           ))}
@@ -111,7 +104,9 @@ const FoodSection = () => {
           {filteredFoods.map((food) => (
             <Table.Row key={food.id}>
               {!isMobile && <Table.Cell><Table.Image src={food.imageUrl} alt={food.name} /></Table.Cell>}
-              <Table.Cell textcell={food.name} />
+              <div className="w-10">
+                <Table.Cell>{food.name}</Table.Cell>
+              </div>
               {!isMobile && <>
                 <Table.Cell textcell={food.categories.join(", ")} />
                 <Table.Cell textcell={food.calories.toString()} />
