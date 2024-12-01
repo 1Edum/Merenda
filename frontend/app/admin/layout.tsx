@@ -10,10 +10,10 @@ export default function RootLayout({
       <body>
         <header>
           <Header menu={true} links={[
-            { name: "Add User", link: "#adicionarusuario" },
+            { name: "Add User", link: "/admin/#adicionarusuario" },
             { name: "Add Food", link: "/admin/#adicionarcomida" },
             { name: "Waste", link:"/admin/#waste" },
-            { name: "TV Screen", link: "/kitchen/telagrande" },
+            { name: "TV Screen", link: "/admin/tv" },
             ]}/>
         </header>
           {children}
