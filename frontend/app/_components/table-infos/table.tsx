@@ -56,7 +56,7 @@ return <button className='size-table flex items-center' {...rest}>
 interface TableImageProps extends ImageProps {}
 
 const TableImage = ({ ...rest }: TableImageProps) => {
-  return <Image {...rest} width={176} height={10} className='size-table ' />;
+  return <Image {...rest} width={112} height={10} className='w-44' />;
 };
 // TableBody Component
 interface TableBodyProps {

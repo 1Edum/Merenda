@@ -68,7 +68,7 @@
     @apply bg-background text-foreground;
   }
   .size-table{
-    @apply max-w-28 text-wrap md:w-44
+    @apply w-20 text-wrap 
   }
   .size-components{
     @apply  h-9 w-full md:h-10
