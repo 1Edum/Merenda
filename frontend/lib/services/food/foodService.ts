@@ -25,12 +25,12 @@ export const deleteFood = async (id: number, setFoods: React.Dispatch<React.SetS
 
 export const toggleActiveFood = async (id: number, isActive: boolean) => {
   try {
-    const response = await fetch(`http://localhost/food/ativar/${id}`, {
-      method: "PATCH",
+    const response = await fetch(`http://localhost/food/active-true/${!isActive}`, { // Inverte o status
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ active: isActive }),
+      body: JSON.stringify({ id }), // Apenas envia o ID no corpo
     });
 
     if (!response.ok) {
@@ -97,3 +97,27 @@ export const updateFoodCategories = async (
     console.error("Erro ao atualizar as categorias do alimento:", error);
   }
 };
+
+export const submitFoodAmount = async (userId: number, selectedFoods: any[]) => {
+  try {
+    const response = await fetch("http://localhost/food/update-amount", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, selectedFoods }), // Inclui userId e a lista de alimentos selecionados no corpo da requisição
+    });
+    if (response.ok) {
+      console.log("Quantidade enviada com sucesso!");
+    } else {
+      console.error("Erro ao enviar a quantidade.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+};
+
+
+
+
+
