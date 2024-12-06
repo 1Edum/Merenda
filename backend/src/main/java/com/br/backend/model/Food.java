@@ -16,12 +16,13 @@ public class Food {
     private Long id;
     private String name;
 
-    @ElementCollection // Define que categories será uma coleção embutida
-    private List<String> categories; // Alterado de String para List<String>
+    @ElementCollection
+    private List<String> categories;
 
     private int calories;
     private String nutritionalValue;
     private String imageUrl;
     private boolean active;
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int amount;
 }

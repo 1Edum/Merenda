@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -94,17 +95,25 @@ public class FoodRestController {
     }
 
     @PutMapping("/update-amount/{id}")
-    public ResponseEntity<Food> updateAmount(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
-        Integer amountToAdd = request.get("amount"); // Obtemos a quantidade a ser adicionada
-        Optional<Food> foodOptional = foodRepository.findById(id); // Busca o alimento pelo ID
-
-        if (foodOptional.isPresent()) {
-            Food food = foodOptional.get(); // Obtém o alimento
-            food.setAmount(food.getAmount() + amountToAdd); // Soma a nova quantidade à quantidade existente
-            foodRepository.save(food); // Salva a nova quantidade no banco de dados
-            return ResponseEntity.ok(food); // Retorna o alimento atualizado
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna NOT FOUND se o alimento não existir
+    public ResponseEntity<Food> updateAmount(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> request) {
+        // Validar o valor de entrada
+        Integer amountToAdd = request.get("amount");
+        if (amountToAdd == null || amountToAdd <= 0) {
+            return ResponseEntity.badRequest().build();
         }
-    }
-}
+        // Buscar o alimento pelo ID e lançar exceção caso não exista
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
+        // Atualizar a quantidade e salvar
+        int newAmount = food.getAmount() + amountToAdd;
+        if (newAmount < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Protege contra valores negativos
+        }
+        food.setAmount(newAmount);
+        foodRepository.save(food);
+
+        return ResponseEntity.ok(food);
+    }}
+
