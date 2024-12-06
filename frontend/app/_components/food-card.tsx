@@ -9,13 +9,16 @@ import IncrementDecrement from "../_components/increment-decrement";
 
 interface FoodCardProps {
   food: Food;
+  onAmountChange: (foodId: number, newAmount: number) => void;
 }
 
-const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
-  // Exibe o card apenas se o alimento estiver ativo
-  if (food.active) return null;
-
+const FoodCard: React.FC<FoodCardProps> = ({ food, onAmountChange }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // Only render the card if food.active is true
+  if (food.active) {
+    return null;
+  }
 
   return (
     <Card className="py-2 px-4">
@@ -39,7 +42,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
         </Dialog>
       </CardHeader>
       <Image src={food.imageUrl} className="w-28 h-28" alt={food.name} width={100} height={100} />
-      <IncrementDecrement foodId={food.id} initialCount={0} />
+      <IncrementDecrement foodId={food.id} onAmountChange={onAmountChange} />
     </Card>
   );
 };

@@ -98,25 +98,24 @@ export const updateFoodCategories = async (
   }
 };
 
-export const submitFoodAmount = async (userId: number, selectedFoods: any[]) => {
+export const submitFoodAmount = async (foodId: number, amount: number) => {
   try {
-    const response = await fetch("http://localhost/food/update-amount", {
+    const response = await fetch(`http://localhost/food/update-amount/${foodId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId, selectedFoods }), // Inclui userId e a lista de alimentos selecionados no corpo da requisição
+      body: JSON.stringify({ amount }),
     });
-    if (response.ok) {
-      console.log("Quantidade enviada com sucesso!");
-    } else {
-      console.error("Erro ao enviar a quantidade.");
+    if (!response.ok) {
+      console.error("Erro ao enviar a quantidade:", response.status, await response.text()); //More informative error
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    console.log("Quantidade enviada com sucesso!");
   } catch (error) {
     console.error("Erro na requisição:", error);
   }
 };
-
 
 
 
