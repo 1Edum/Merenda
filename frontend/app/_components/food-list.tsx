@@ -59,8 +59,8 @@ const FoodList: React.FC<FoodListProps> = ({ category }) => {
   };
 
   return (
-    <div className="lg:px-24 gap-4 mt-3 px-2">
-      <div className="grid grid-cols-2 md:grid-cols-3">
+    <div className="lg:px-24 px-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4">
         {filteredFoods.map((food) => (
           <FoodCard key={food.id} food={food} onAmountChange={handleAmountChange} />
         ))}
