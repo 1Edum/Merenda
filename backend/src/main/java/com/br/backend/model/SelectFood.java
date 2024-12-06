@@ -35,6 +35,4 @@ public class SelectFood {
     @Temporal(TemporalType.DATE)
     private Date dateSelect;
 
-    private Integer amountFood;
-
 }
