@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Food } from "../interface/Food";
-import { fetchFoods } from "@/lib/services/food/foodService";
+import { fetchFoods, submitFoodAmount } from "@/lib/services/food/foodService";
 import FoodCard from "./food-card";
 import { Button } from "./ui/button";
-import { submitFoodAmount } from "@/lib/services/food/foodService";
 
 interface FoodListProps {
   category?: string;
@@ -14,9 +13,8 @@ interface FoodListProps {
 const FoodList: React.FC<FoodListProps> = ({ category }) => {
   const [foods, setFoods] = useState<Food[]>([]);
   const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
-  const [amounts, setAmounts] = useState<{[key: number]: number}>({});
-  // Add a loading state
-  const [isLoading, setIsLoading] = useState(false);
+  const [amounts, setAmounts] = useState<{ [key: number]: number }>({});
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
     const loadFoods = async () => {
@@ -24,7 +22,7 @@ const FoodList: React.FC<FoodListProps> = ({ category }) => {
         const fetchedFoods = await fetchFoods();
         setFoods(fetchedFoods);
         const initialAmounts: { [key: number]: number } = {};
-        fetchedFoods.forEach(food => initialAmounts[food.id] = 0);
+        fetchedFoods.forEach((food) => (initialAmounts[food.id] = 0));
         setAmounts(initialAmounts);
       } catch (error) {
         console.error("Erro ao carregar os alimentos:", error);
@@ -46,7 +44,7 @@ const FoodList: React.FC<FoodListProps> = ({ category }) => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true); // Set loading to true before submitting
+    setIsButtonDisabled(true); // Desativa o botão após o primeiro clique
     try {
       for (const foodId in amounts) {
         const amount = amounts[parseInt(foodId)];
@@ -54,11 +52,9 @@ const FoodList: React.FC<FoodListProps> = ({ category }) => {
           await submitFoodAmount(parseInt(foodId), amount);
         }
       }
+      console.log("Envio concluído com sucesso!");
     } catch (error) {
       console.error("Erro ao enviar as quantidades:", error);
-      // Handle error appropriately (e.g., display an error message)
-    } finally {
-      setIsLoading(false); // Set loading to false after submitting (success or failure)
     }
   };
 
@@ -69,8 +65,9 @@ const FoodList: React.FC<FoodListProps> = ({ category }) => {
           <FoodCard key={food.id} food={food} onAmountChange={handleAmountChange} />
         ))}
       </div>
-      {/* Disable the button while loading */}
-      <Button onClick={handleSubmit} disabled={isLoading}>Enviar</Button>
+      <Button onClick={handleSubmit} disabled={isButtonDisabled}>
+        Enviar
+      </Button>
     </div>
   );
 };
